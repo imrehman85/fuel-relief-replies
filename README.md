@@ -4,7 +4,7 @@ Searchable library of standard customer responses for PM Fuel Relief complaints
 registered on the BPO CMS. Built for L2 support: find the right reply by
 complaint nature or keyword, and copy it straight into the ticket.
 
-41 replies across four categories — Registration, Token Generation,
+44 replies across four categories — Registration, Token Generation,
 Token Redemption, and Status & Closing. Every reply is copied with the
 agent's signature appended automatically.
 
