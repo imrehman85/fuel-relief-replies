@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fuel Relief Replies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#f6f8f4; --surface:#ffffff; --surface-2:#eef2ec;
+  --fg:#18201a; --muted:#5d6b61; --faint:#8b978f; --border:#dbe2d9;
+  --accent:#0f6b3d; --accent-ink:#ffffff;
+  --reg:#9a6212; --gen:#1d6a7a; --red:#0f6b3d; --gnl:#5d6b61;
+  --danger:#a8341f;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1310; --surface:#171d18; --surface-2:#1f2721;
+    --fg:#e7ece6; --muted:#9daaa1; --faint:#75837a; --border:#2b342d;
+    --accent:#4fae74; --accent-ink:#08150d;
+    --reg:#d3a154; --gen:#63b6c8; --red:#4fae74; --gnl:#9daaa1;
+    --danger:#e0806c;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1310; --surface:#171d18; --surface-2:#1f2721;
+  --fg:#e7ece6; --muted:#9daaa1; --faint:#75837a; --border:#2b342d;
+  --accent:#4fae74; --accent-ink:#08150d;
+  --reg:#d3a154; --gen:#63b6c8; --red:#4fae74; --gnl:#9daaa1;
+  --danger:#e0806c;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--fg);
+  font-family:var(--f-body); font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+[hidden]{display:none!important}
+
+/* ---------- login ---------- */
+.gate{min-height:100vh;display:grid;place-items:center;padding:24px}
+.gate-card{
+  width:100%;max-width:380px;background:var(--surface);
+  border:1px solid var(--border);border-radius:12px;padding:28px 26px;
+  display:flex;flex-direction:column;gap:16px
+}
+.gate-eyebrow{
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);margin:0
+}
+.gate-card h1{
+  font-family:var(--f-display);font-weight:700;font-size:26px;
+  margin:0;letter-spacing:-.01em
+}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13px;font-weight:500;color:var(--muted)}
+.field input{
+  font:inherit;font-size:15px;color:var(--fg);background:var(--bg);
+  border:1px solid var(--border);border-radius:8px;padding:10px 12px
+}
+.field input:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+.gate button{
+  font:inherit;font-size:15px;font-weight:600;cursor:pointer;
+  background:var(--accent);color:var(--accent-ink);border:none;
+  border-radius:8px;padding:11px 16px
+}
+.gate button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.err{color:var(--danger);font-size:13px;margin:0;min-height:1.2em}
+
+/* ---------- app ---------- */
+.wrap{max-width:820px;margin:0 auto;padding-inline:20px;padding-block:0 64px}
+.mast{padding-block:30px 18px;border-bottom:1px solid var(--border)}
+.mast-top{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.mast-top > div{flex:1;min-width:0}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+h1.title{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,40px);line-height:1.05;letter-spacing:-.01em;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:10px 0 0;max-width:56ch}
+.sig-note{margin:14px 0 0;font-size:13px;color:var(--faint);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sig-note code{font-family:var(--f-mono);color:var(--fg);background:var(--surface-2);padding:2px 7px;border-radius:4px}
+.logout{
+  flex:none;font:inherit;font-size:13px;cursor:pointer;
+  background:var(--surface);color:var(--muted);border:1px solid var(--border);
+  border-radius:7px;padding:6px 12px
+}
+.logout:hover{color:var(--fg)}
+.logout:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.rail{
+  position:sticky;top:0;z-index:20;background:var(--bg);
+  padding-block:14px 12px;border-bottom:1px solid var(--border);
+  display:flex;flex-direction:column;gap:11px
+}
+.searchbox{position:relative;display:flex;align-items:center}
+.searchbox svg{position:absolute;left:13px;width:16px;height:16px;color:var(--faint);pointer-events:none}
+#q{width:100%;font:inherit;font-size:15px;color:var(--fg);background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px 13px 11px 38px}
+#q::placeholder{color:var(--faint)}
+#q:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+
+.chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center;min-width:0}
+.chip{font:inherit;font-size:13px;font-weight:500;cursor:pointer;background:var(--surface);color:var(--muted);border:1px solid var(--border);border-radius:99px;padding:5px 12px;transition:background .12s,color .12s,border-color .12s}
+.chip:hover{color:var(--fg)}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.count{margin-left:auto;font-family:var(--f-mono);font-size:12px;color:var(--faint);white-space:nowrap}
+
+.group{margin-top:30px}
+.group-head{display:flex;align-items:baseline;gap:10px;margin:0 0 12px}
+.group-head h2{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin:0;color:var(--kc,var(--muted))}
+.group-rule{flex:1;height:1px;background:var(--border);min-width:0}
+.cards{display:flex;flex-direction:column;gap:10px}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;border-left:3px solid var(--kc,var(--accent));padding:15px 16px;display:flex;flex-direction:column;gap:9px;min-width:0}
+.card-top{display:flex;align-items:flex-start;gap:12px}
+.card h3{font-family:var(--f-body);font-weight:600;font-size:15px;margin:0;flex:1;min-width:0;letter-spacing:-.005em}
+.copy{flex:none;font:inherit;font-size:12.5px;font-weight:500;cursor:pointer;background:var(--surface-2);color:var(--muted);border:1px solid var(--border);border-radius:7px;padding:5px 11px;display:inline-flex;align-items:center;gap:6px;transition:background .12s,color .12s}
+.copy:hover{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.copy.done{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.copy svg{width:13px;height:13px}
+.body{margin:0;color:var(--fg);max-width:66ch}
+.sig{font-family:var(--f-mono);font-size:12.5px;color:var(--faint);margin:0;padding-top:2px}
+.when{font-size:12.5px;color:var(--muted);margin:0;padding-top:7px;border-top:1px dashed var(--border)}
+.when b{font-weight:600;color:var(--fg)}
+.empty{text-align:center;color:var(--muted);padding:48px 20px;border:1px dashed var(--border);border-radius:10px;margin-top:30px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:480px){
+  .card-top{flex-direction:column;gap:8px}
+  .copy{align-self:flex-start}
+  .count{width:100%;margin-left:0;text-align:right}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div class="gate" id="gate">
+  <form class="gate-card" id="loginForm" autocomplete="off">
+    <p class="gate-eyebrow">PM Fuel Relief &middot; L2 Support</p>
+    <h1>Sign in</h1>
+    <div class="field">
+      <label for="u">Username</label>
+      <input id="u" name="username" type="text" required autocomplete="username">
+    </div>
+    <div class="field">
+      <label for="p">Password</label>
+      <input id="p" name="password" type="password" required autocomplete="current-password">
+    </div>
+    <p class="err" id="err" role="alert"></p>
+    <button type="submit">Sign in</button>
+  </form>
+</div>
+
+<!-- ============ APP ============ -->
+<div class="wrap" id="app" hidden>
+  <header class="mast">
+    <div class="mast-top">
+      <div>
+        <p class="eyebrow">PM Fuel Relief &middot; L2 Support</p>
+        <h1 class="title">Fuel Relief Replies</h1>
+      </div>
+      <button class="logout" type="button" id="logout">Sign out</button>
+    </div>
+    <p class="sub">Standard customer responses for complaints registered on the BPO CMS. Search, then copy the reply straight into the ticket.</p>
+    <p class="sig-note">Every reply is copied with the signature <code>by Abdur Rehman</code> appended.</p>
+  </header>
+
+  <div class="rail">
+    <label class="searchbox">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="9" r="6"/><path d="M13.5 13.5 17 17" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="Search by nature, keyword, plate format&hellip;" autocomplete="off" aria-label="Search replies">
+    </label>
+    <div class="chips" role="group" aria-label="Filter by category">
+      <button class="chip" type="button" data-cat="all" aria-pressed="true">All</button>
+      <button class="chip" type="button" data-cat="reg" aria-pressed="false">Registration</button>
+      <button class="chip" type="button" data-cat="gen" aria-pressed="false">Token Generation</button>
+      <button class="chip" type="button" data-cat="red" aria-pressed="false">Token Redemption</button>
+      <button class="chip" type="button" data-cat="gnl" aria-pressed="false">Status</button>
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+
+  <main id="list"></main>
+  <p class="empty" id="empty" hidden>No reply matches that search.</p>
+</div>
+
+<script>
+/* =====================================================================
+   LOGIN CREDENTIALS  --  CHANGE THESE TWO LINES
+   ---------------------------------------------------------------------
+   This is a client-side gate only. Anyone who opens the page source or
+   the repository can read these values. It keeps casual visitors out;
+   it is NOT real security. Do not reuse a password from anywhere else.
+   ===================================================================== */
+const USERNAME = "admin";
+const PASSWORD = "CHANGE_ME";
+/* ===================================================================== */
+
+const SIGNATURE = "by Abdur Rehman";
+const SESSION_KEY = "frr.signedin";
+
+/* ---------- login handling ---------- */
+const gate = document.getElementById("gate");
+const app = document.getElementById("app");
+const errEl = document.getElementById("err");
+
+function signedIn(){
+  try { return sessionStorage.getItem(SESSION_KEY) === "1"; }
+  catch (e) { return false; }
+}
+function showApp(){
+  gate.hidden = true;
+  app.hidden = false;
+  document.getElementById("q").focus();
+}
+document.getElementById("loginForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const u = document.getElementById("u").value.trim();
+  const p = document.getElementById("p").value;
+  if (u === USERNAME && p === PASSWORD) {
+    try { sessionStorage.setItem(SESSION_KEY, "1"); } catch (_) {}
+    errEl.textContent = "";
+    showApp();
+  } else {
+    errEl.textContent = "Incorrect username or password.";
+    document.getElementById("p").value = "";
+    document.getElementById("p").focus();
+  }
+});
+document.getElementById("logout").addEventListener("click", () => {
+  try { sessionStorage.removeItem(SESSION_KEY); } catch (_) {}
+  app.hidden = true;
+  gate.hidden = false;
+  document.getElementById("u").value = "";
+  document.getElementById("p").value = "";
+  document.getElementById("u").focus();
+});
+
+/* ---------- reply data ---------- */
+const GROUPS = [
+  { key:"reg", label:"Registration", color:"var(--reg)", items:[
+    { t:"Registration Date Incorrect",
+      b:"The registration date provided is incorrect. Please check your vehicle registration book and enter the registration date exactly as mentioned there. If the date is not clear, you may contact the Excise Department helpline to confirm the exact registration date recorded in their database. Thank you.",
+      w:"Customer entered a registration date that does not match the Excise record." },
+    { t:"Incorrect Information",
+      b:"The information provided is incorrect. Kindly follow the instructions carefully and ensure that the vehicle number, registration date and province code match exactly with your vehicle registration book. Thank you.",
+      w:"General mismatch — more than one field is wrong." },
+    { t:"Vehicle Number Format",
+      b:"Please enter the vehicle number in the following format: DGN-12-2074 — with the model number in the centre, exactly as mentioned in your vehicle registration book. Thank you.",
+      w:"Customer sent the plate without the model number or in the wrong format. Swap in the real plate." },
+    { t:"Re-register With Model Number",
+      b:"Please re-register the vehicle using the number LEZ-13-9639, including the model number in the centre as mentioned in your vehicle registration book. Thank you.",
+      w:"You already know the correct plate string — swap in the real number before sending." },
+    { t:"Vehicle Not in Your Name",
+      b:"Vehicle RIB-15626 is not registered in your name, and vehicle ACT-6788 does not exist in the Excise record. Please verify both vehicle numbers from your vehicle registration book and provide the correct details. Thank you.",
+      w:"EDR shows the plate belongs to someone else, or no such vehicle exists. Swap in the real plate numbers." },
+    { t:"Already Registered",
+      b:"Only one vehicle can be registered against one CNIC, and a vehicle is already registered against this CNIC. Registration with a different mobile number is also not permitted. Thank you.",
+      w:"Nature: Already Registered. Customer is trying a second vehicle or a second number." },
+    { t:"CNIC and Mobile Number Must Match",
+      b:"Only one vehicle can be registered against one CNIC, even with a different mobile number. The token will only be issued when the mobile number and CNIC belong to the same owner. Thank you.",
+      w:"Customer registered from a number held on someone else’s CNIC." },
+    { t:"Mobile Number Not on CNIC (NADRA)",
+      b:"As per NADRA record, this mobile number is not registered against your CNIC. The mobile number must be registered on the same CNIC as the vehicle owner. Please use a number that is in your own name and register again. Thank you.",
+      w:"NADRA lookup fails — SIM ownership does not match the CNIC." },
+    { t:"Province Mismatch",
+      b:"The province code entered does not match the province in which your vehicle is registered. Please enter the province code exactly as mentioned in your vehicle registration book. Thank you.",
+      w:"Nature: Province Mismatch. Correct code is visible in the Excise record." },
+    { t:"Province Code — Vehicle’s Province, Not Yours",
+      b:"The province code must be that of the vehicle, not your own province of residence. Please check your vehicle registration book and enter the province code exactly as written there. Thank you.",
+      w:"Customer entered the province they live in instead of the vehicle’s registering province." },
+    { t:"CNIC Not Linked",
+      b:"Your CNIC is not linked with the vehicle in our record. The token is issued only when the mobile number and CNIC belong to the same owner. Kindly verify and register again. Thank you.",
+      w:"Nature: CNIC Not Linked." },
+    { t:"SIM Not on Name",
+      b:"The mobile number used is not registered on your own CNIC. Please register using a SIM issued on the same CNIC as the vehicle owner. Thank you.",
+      w:"Nature: SIM not on name." },
+    { t:"Not Eligible",
+      b:"As per record, your vehicle does not meet the eligibility criteria for this scheme. Thank you.",
+      w:"Nature: Not Eligible. Vehicle category or engine capacity is outside the scheme." },
+    { t:"Registration Incomplete",
+      b:"Your registration could not be completed. Please re-check the vehicle number and registration date from your vehicle registration book and submit again exactly as mentioned there. Thank you.",
+      w:"Nature: Registration Incomplete." },
+    { t:"No Record Found Against CNIC",
+      b:"No information has been received against this CNIC. As per our record, no registration exists against this CNIC. Please register first by sending your details from the mobile number registered on the same CNIC. Thank you.",
+      w:"Nothing comes up in EDR for the CNIC the customer gave." },
+    { t:"No Reply Received",
+      b:"No response has been received against this CNIC. Please re-send your registration details from the mobile number registered on the same CNIC, and ensure the format is exactly as advised. Thank you.",
+      w:"Customer says they sent the SMS but got nothing back." },
+    { t:"Re-registration Required — System Updated",
+      b:"The system has been updated. Kindly re-register using the details provided, exactly as mentioned in your vehicle registration book. Thank you.",
+      w:"A fix has gone in and the customer can now try again." },
+    { t:"Registration SMS Not Received",
+      b:"Your registration request has been received, but the confirmation SMS could not be delivered to your mobile number. Please ensure your SIM is active and has network coverage, then send your details again from the same number. Thank you.",
+      w:"Nature: SMS Not Received. Request reached the system but the reply never landed." },
+    { t:"Second Vehicle Not Allowed",
+      b:"A vehicle is already registered against your CNIC. Under this scheme only one vehicle can be registered per CNIC, so a second vehicle cannot be registered. Thank you.",
+      w:"Nature: Second Vehicle. Customer is knowingly adding another vehicle." },
+    { t:"Too Many Attempts",
+      b:"Several registration attempts have been made from this number, due to which it has been temporarily blocked. Please wait for some time and then try again using the correct details from your vehicle registration book. Thank you.",
+      w:"Nature: Too Many Attempts. Number is rate-limited after repeated failures." },
+    { t:"Vehicle Data Not Found",
+      b:"This vehicle number does not exist in the Excise record. Please verify the vehicle number from your registration book and confirm that the vehicle is registered with the Excise Department. Thank you.",
+      w:"Nature: Vehicle data not found. Nothing comes up in EDR against the plate." },
+    { t:"Wrong CNIC Entered",
+      b:"The CNIC entered does not match our record. Please send your 13-digit CNIC number without dashes, exactly as printed on your identity card. Thank you.",
+      w:"Customer typed the CNIC with dashes, spaces, or digits missing." },
+    { t:"Vehicle Ownership Transferred",
+      b:"As per the Excise record, this vehicle is registered in another person’s name. If you have purchased the vehicle, please complete the ownership transfer with the Excise Department first, then register again. Thank you.",
+      w:"EDR still shows the previous owner — transfer has not been recorded." }
+  ]},
+
+  { key:"gen", label:"Token Generation", color:"var(--gen)", items:[
+    { t:"Token Already Generated",
+      b:"The token has already been generated, so there is no need to register again. Please send TOK from the same mobile number used for registration to receive your token. Thank you.",
+      w:"Customer keeps re-registering when the token already exists." },
+    { t:"Already Registered — Token Issued",
+      b:"Your vehicle is already registered and your token has already been generated. Please visit an authorised fuel station with your token to obtain your fuel. Thank you.",
+      w:"Both registration and token are confirmed — customer only needs to go and redeem." },
+    { t:"TOK Not Sent to 9771",
+      b:"Your token has already been generated. Please send TOK from the same mobile number used at the time of registration to receive it. Thank you.",
+      w:"Nature: TOK Not Sent to 9771. Check the remark first — many of these are really pump verification failures." },
+    { t:"Token SMS Not Received",
+      b:"Your token has been generated, but the SMS could not be delivered to your mobile number. Please ensure your SIM is active and has network coverage, then send TOK again from the same registered number. Thank you.",
+      w:"Nature: Token SMS Not Received. Token exists in the system but the SMS never arrived." },
+    { t:"Token SMS Deleted",
+      b:"Your token has already been generated. If the message has been deleted, please send TOK from the same registered mobile number to receive your token details again. Thank you.",
+      w:"Nature: Token SMS Deleted. Customer deleted the message and needs it resent." },
+    { t:"Token Not Yet Generated",
+      b:"Your token has not been generated yet. Tokens are issued as per the scheme schedule against your registered vehicle. Please send TOK again from your registered mobile number after some time. Thank you.",
+      w:"Registration is complete but no token exists against the CNIC yet." }
+  ]},
+
+  { key:"red", label:"Token Redemption", color:"var(--red)", items:[
+    { t:"Pump Cannot Verify",
+      b:"Your token is valid in the system; however, the pump application is unable to verify it at the dealer end. The matter has been forwarded to the concerned team for resolution. Kindly try again after some time. Thank you.",
+      w:"Nature: Pump Cant Verify — the largest bucket in the open queue." },
+    { t:"Token Expired Early",
+      b:"Your token is still active in the system. The verification issue is at the pump end and has been referred to the concerned team. Please try at another authorised fuel station in the meantime. Thank you.",
+      w:"Nature: Token Expired Early, but the token is still live — it is a pump fault, not an expiry." },
+    { t:"Token Already Used",
+      b:"As per our record, this token has already been redeemed. If you have not used it yourself, kindly visit the fuel station where it was redeemed, or contact the helpline with your token number. Thank you.",
+      w:"Nature: Token Used. Redemption is confirmed in the record." },
+    { t:"Pump Declined",
+      b:"The fuel station has declined to process your token. Please visit another authorised fuel station under the scheme. Kindly share the station name and location so the matter can be taken up with the concerned OMC. Thank you.",
+      w:"Nature: Pump Declined. Dealer refused to serve despite a valid token." },
+    { t:"Pump Not Found",
+      b:"The fuel station you visited is not listed in the system. Please visit an authorised fuel station registered under the scheme to redeem your token. Thank you.",
+      w:"Nature: Pump not found. Station is not on-boarded in the pump application." },
+    { t:"Token Expired",
+      b:"Your token has expired and can no longer be redeemed. A new token will be issued as per the scheme schedule. Please send TOK from your registered mobile number once it is due. Thank you.",
+      w:"Token genuinely lapsed — confirm the expiry in the record before sending this." },
+    { t:"Fuel Station Location Required",
+      b:"Kindly share the name and location of the fuel station where the issue occurred, so the matter can be taken up with the concerned OMC. Thank you.",
+      w:"Pump complaint arrived with no station details — needed before it can be escalated." },
+    { t:"Location Not Provided",
+      b:"Your complaint could not be processed as the fuel station name and location were not provided. Kindly share these details so the matter can be taken forward. Thank you.",
+      w:"Closing or holding reply when the customer never supplied the station details." }
+  ]},
+
+  { key:"gnl", label:"Status & Closing", color:"var(--gnl)", items:[
+    { t:"Complaint Registered — Under Process",
+      b:"Your complaint has been registered and is under process with the concerned team. You will be informed as soon as it is resolved. Thank you.",
+      w:"First reply on a ticket that genuinely needs escalation." },
+    { t:"Issue Resolved",
+      b:"The issue reported in your complaint has been resolved. Please try again, and contact us if the problem persists. Thank you.",
+      w:"Closing reply once the fix is confirmed in the system." },
+    { t:"Forwarded to Concerned Team",
+      b:"Your complaint has been forwarded to the concerned team for resolution. Kindly try again after some time. Thank you.",
+      w:"Ticket has been re-routed and the customer needs an interim reply." },
+    { t:"Information Confirmed — No Action Required",
+      b:"Your details have been verified and no issue has been found in our record. Please try again from your registered mobile number. Thank you.",
+      w:"EDR check comes back clean and the complaint needs no further action." }
+  ]}
+];
+
+/* ---------- render ---------- */
+const list = document.getElementById("list");
+const qEl = document.getElementById("q");
+const countEl = document.getElementById("count");
+const emptyEl = document.getElementById("empty");
+const COPY_ICON = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 3.5h-7a1 1 0 0 0-1 1v7" stroke-linecap="round"/></svg>';
+
+let total = 0;
+for (const g of GROUPS) {
+  const sec = document.createElement("section");
+  sec.className = "group";
+  sec.dataset.cat = g.key;
+  sec.style.setProperty("--kc", g.color);
+
+  const head = document.createElement("div");
+  head.className = "group-head";
+  const h2 = document.createElement("h2");
+  h2.textContent = g.label;
+  const rule = document.createElement("span");
+  rule.className = "group-rule";
+  head.append(h2, rule);
+
+  const cards = document.createElement("div");
+  cards.className = "cards";
+
+  for (const it of g.items) {
+    total++;
+    const card = document.createElement("article");
+    card.className = "card";
+    card.dataset.cat = g.key;
+    card.dataset.hay = (it.t + " " + it.b + " " + it.w).toLowerCase();
+
+    const top = document.createElement("div");
+    top.className = "card-top";
+    const h3 = document.createElement("h3");
+    h3.textContent = it.t;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy";
+    btn.innerHTML = COPY_ICON + "<span>Copy</span>";
+    btn.addEventListener("click", () => copyReply(btn, it.b));
+    top.append(h3, btn);
+
+    const body = document.createElement("p");
+    body.className = "body";
+    body.textContent = it.b;
+
+    const sig = document.createElement("p");
+    sig.className = "sig";
+    sig.textContent = SIGNATURE;
+
+    const when = document.createElement("p");
+    when.className = "when";
+    const wb = document.createElement("b");
+    wb.textContent = "Use when: ";
+    when.append(wb, document.createTextNode(it.w));
+
+    card.append(top, body, sig, when);
+    cards.append(card);
+  }
+
+  sec.append(head, cards);
+  list.append(sec);
+}
+
+async function copyReply(btn, text){
+  const payload = text + "\n\n" + SIGNATURE;
+  const label = btn.querySelector("span");
+  try {
+    await navigator.clipboard.writeText(payload);
+    flash(btn, label, "Copied");
+  } catch (e) {
+    const p = btn.closest(".card").querySelector(".body");
+    try {
+      const r = document.createRange();
+      r.selectNodeContents(p);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(r);
+      flash(btn, label, "Selected");
+    } catch (_) {
+      flash(btn, label, "Select manually");
+    }
+  }
+}
+function flash(btn, label, msg){
+  const prev = label.textContent;
+  label.textContent = msg;
+  btn.classList.add("done");
+  setTimeout(() => { label.textContent = prev; btn.classList.remove("done"); }, 1400);
+}
+
+let activeCat = "all";
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    activeCat = chip.dataset.cat;
+    document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", String(c === chip)));
+    apply();
+  });
+});
+qEl.addEventListener("input", apply);
+
+function apply(){
+  const term = qEl.value.trim().toLowerCase();
+  let shown = 0;
+  for (const sec of document.querySelectorAll(".group")) {
+    let secShown = 0;
+    for (const card of sec.querySelectorAll(".card")) {
+      const catOk = activeCat === "all" || card.dataset.cat === activeCat;
+      const textOk = !term || card.dataset.hay.includes(term);
+      const vis = catOk && textOk;
+      card.hidden = !vis;
+      if (vis) { secShown++; shown++; }
+    }
+    sec.hidden = secShown === 0;
+  }
+  countEl.textContent = shown === total ? total + " replies" : shown + " of " + total;
+  emptyEl.hidden = shown !== 0;
+}
+
+apply();
+if (signedIn()) showApp();
+</script>
+</body>
+</html>
