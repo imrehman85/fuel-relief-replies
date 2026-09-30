@@ -86,7 +86,22 @@ body{
 h1.title{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,40px);line-height:1.05;letter-spacing:-.01em;margin:0;text-wrap:balance}
 .sub{color:var(--muted);margin:10px 0 0;max-width:56ch}
 .sig-note{margin:14px 0 0;font-size:13px;color:var(--faint);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.sig-note code{font-family:var(--f-mono);color:var(--fg);background:var(--surface-2);padding:2px 7px;border-radius:4px}
+.sig-field{
+  display:inline-flex;align-items:center;gap:0;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:6px;
+  padding:2px 8px 2px 8px;transition:border-color .12s
+}
+.sig-field:focus-within{border-color:var(--accent)}
+.sig-by{font-family:var(--f-mono);font-size:12.5px;color:var(--faint);padding-right:5px}
+#agent{
+  font-family:var(--f-mono);font-size:12.5px;color:var(--fg);
+  background:transparent;border:none;padding:3px 0;width:13ch;min-width:8ch
+}
+#agent:focus{outline:none}
+#agent::placeholder{color:var(--faint)}
+.sig-field svg{width:12px;height:12px;color:var(--faint);flex:none;margin-left:4px}
+.sig-field:focus-within svg{color:var(--accent)}
+.sig-saved{font-size:12px;color:var(--accent);min-width:7ch}
 .logout{
   flex:none;font:inherit;font-size:13px;cursor:pointer;
   background:var(--surface);color:var(--muted);border:1px solid var(--border);
@@ -172,7 +187,15 @@ h1.title{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,4
       <button class="logout" type="button" id="logout">Sign out</button>
     </div>
     <p class="sub">Standard customer responses for complaints registered on the BPO CMS. Search, then copy the reply straight into the ticket.</p>
-    <p class="sig-note">Every reply is copied with the signature <code>by Abdur Rehman</code> appended.</p>
+    <p class="sig-note">
+      <label for="agent">Every reply is copied signed</label>
+      <span class="sig-field">
+        <span class="sig-by">by</span>
+        <input id="agent" type="text" maxlength="60" placeholder="Your name" aria-label="Your name for the signature" autocomplete="name">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M11 2.5 13.5 5 5.5 13H3v-2.5z" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="sig-saved" id="sigSaved" aria-live="polite"></span>
+    </p>
   </header>
 
   <div class="rail">
@@ -206,8 +229,23 @@ const USERNAME = "admin";
 const PASSWORD = "CHANGE_ME";
 /* ===================================================================== */
 
-const SIGNATURE = "by Abdur Rehman";
+/* Signature name is per-browser: each agent sets their own, kept in
+   localStorage so it survives reloads on that machine. */
+const DEFAULT_AGENT = "Abdur Rehman";
+const AGENT_KEY = "frr.agent";
 const SESSION_KEY = "frr.signedin";
+
+function loadAgent(){
+  try { return localStorage.getItem(AGENT_KEY) || DEFAULT_AGENT; }
+  catch (e) { return DEFAULT_AGENT; }
+}
+function saveAgent(name){
+  try { localStorage.setItem(AGENT_KEY, name); } catch (e) {}
+}
+let agentName = loadAgent();
+function signatureLine(){
+  return agentName ? "by " + agentName : "";
+}
 
 /* ---------- login handling ---------- */
 const gate = document.getElementById("gate");
@@ -433,7 +471,7 @@ for (const g of GROUPS) {
 
     const sig = document.createElement("p");
     sig.className = "sig";
-    sig.textContent = SIGNATURE;
+    sig.textContent = signatureLine();
 
     const when = document.createElement("p");
     when.className = "when";
@@ -450,7 +488,8 @@ for (const g of GROUPS) {
 }
 
 async function copyReply(btn, text){
-  const payload = text + "\n\n" + SIGNATURE;
+  const sig = signatureLine();
+  const payload = sig ? text + "\n\n" + sig : text;
   const label = btn.querySelector("span");
   try {
     await navigator.clipboard.writeText(payload);
@@ -502,6 +541,31 @@ function apply(){
   }
   countEl.textContent = shown === total ? total + " replies" : shown + " of " + total;
   emptyEl.hidden = shown !== 0;
+}
+
+/* ---------- signature name ---------- */
+const agentEl = document.getElementById("agent");
+const savedEl = document.getElementById("sigSaved");
+let savedTimer;
+
+agentEl.value = agentName;
+sizeAgentInput();
+
+agentEl.addEventListener("input", () => {
+  agentName = agentEl.value.trim();
+  saveAgent(agentName);
+  sizeAgentInput();
+  for (const el of document.querySelectorAll(".sig")) {
+    el.textContent = signatureLine();
+  }
+  savedEl.textContent = "Saved";
+  clearTimeout(savedTimer);
+  savedTimer = setTimeout(() => { savedEl.textContent = ""; }, 1600);
+});
+
+function sizeAgentInput(){
+  const n = Math.max(8, Math.min(30, agentEl.value.length || 9));
+  agentEl.style.width = n + "ch";
 }
 
 apply();

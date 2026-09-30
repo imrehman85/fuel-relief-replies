@@ -6,7 +6,18 @@ complaint nature or keyword, and copy it straight into the ticket.
 
 41 replies across four categories — Registration, Token Generation,
 Token Redemption, and Status & Closing. Every reply is copied with the
-signature `by Abdur Rehman` appended automatically.
+agent's signature appended automatically.
+
+## Setting your name
+
+The signature name sits in the page header, next to "Every reply is copied
+signed". Type your own name there and it saves immediately — each agent
+sets it once on their own machine.
+
+The name is held in `localStorage`, so it is per-browser: it survives
+reloads and sign-outs, and never reaches anyone else. Clearing site data
+resets it to the default. Leaving the field empty copies the reply with no
+signature at all.
 
 ## Running it
 
