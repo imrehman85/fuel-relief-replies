@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>Fuel Relief Replies</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,6 +15,10 @@
   --accent:#0f6b3d; --accent-ink:#ffffff;
   --reg:#9a6212; --gen:#1d6a7a; --red:#0f6b3d; --gnl:#5d6b61;
   --danger:#a8341f;
+  --sh-m-bg:#e1f5ee; --sh-m-fg:#0f6e56;
+  --sh-e-bg:#faeeda; --sh-e-fg:#854f0b;
+  --sh-n-bg:#eeedfe; --sh-n-fg:#534ab7;
+  --sh-o-bg:#fbeaf0; --sh-o-fg:#993556;
   --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
@@ -26,6 +31,10 @@
     --accent:#4fae74; --accent-ink:#08150d;
     --reg:#d3a154; --gen:#63b6c8; --red:#4fae74; --gnl:#9daaa1;
     --danger:#e0806c;
+    --sh-m-bg:#15302a; --sh-m-fg:#7fd7bb;
+    --sh-e-bg:#33260f; --sh-e-fg:#e5b063;
+    --sh-n-bg:#242143; --sh-n-fg:#a9a2ef;
+    --sh-o-bg:#331a24; --sh-o-fg:#e59bb6;
     color-scheme:dark;
   }
 }
@@ -35,6 +44,10 @@
   --accent:#4fae74; --accent-ink:#08150d;
   --reg:#d3a154; --gen:#63b6c8; --red:#4fae74; --gnl:#9daaa1;
   --danger:#e0806c;
+  --sh-m-bg:#15302a; --sh-m-fg:#7fd7bb;
+  --sh-e-bg:#33260f; --sh-e-fg:#e5b063;
+  --sh-n-bg:#242143; --sh-n-fg:#a9a2ef;
+  --sh-o-bg:#331a24; --sh-o-fg:#e59bb6;
   color-scheme:dark;
 }
 
@@ -148,6 +161,41 @@ h1.title{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,4
 .when b{font-weight:600;color:var(--fg)}
 .empty{text-align:center;color:var(--muted);padding:48px 20px;border:1px dashed var(--border);border-radius:10px;margin-top:30px}
 
+/* ---------- view switcher ---------- */
+.views{display:flex;gap:6px;margin-top:16px}
+.view-btn{
+  font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;
+  background:transparent;color:var(--muted);border:none;
+  border-bottom:2px solid transparent;padding:6px 2px;margin-right:14px
+}
+.view-btn:hover{color:var(--fg)}
+.view-btn[aria-pressed="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.view-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+
+/* ---------- schedule ---------- */
+.sched-legend{display:flex;gap:18px;flex-wrap:wrap;margin:26px 0 14px;font-size:12.5px;color:var(--muted)}
+.sched-legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none}
+.sw[data-s="Morning"]{background:var(--sh-m-bg);border:1px solid var(--sh-m-fg)}
+.sw[data-s="Evening"]{background:var(--sh-e-bg);border:1px solid var(--sh-e-fg)}
+.sw[data-s="Night"]{background:var(--sh-n-bg);border:1px solid var(--sh-n-fg)}
+.sw[data-s="OFF"]{background:var(--sh-o-bg);border:1px solid var(--sh-o-fg)}
+
+.sched-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
+table.sched{border-collapse:collapse;width:100%;min-width:760px;font-size:13px}
+table.sched th,table.sched td{border:1px solid var(--border);padding:9px 11px;text-align:left;white-space:nowrap}
+table.sched thead th{background:var(--surface-2);font-weight:600;color:var(--fg);font-size:12.5px}
+table.sched tbody td:first-child{background:var(--surface);min-width:170px;white-space:normal}
+.sn{font-weight:600;color:var(--fg)}
+.st{font-size:11.5px;color:var(--faint);margin-top:1px}
+.sp{font-family:var(--f-mono);font-size:11.5px;color:var(--accent);margin-top:2px}
+td.shift{font-weight:500}
+td.off-col{color:var(--muted);background:var(--surface)}
+tfoot td{background:var(--surface-2);font-size:12px;color:var(--muted)}
+tfoot td.cv{font-weight:600;font-variant-numeric:tabular-nums}
+tfoot td.cv.zero{color:var(--faint);font-weight:400}
+.sched-note{font-size:12.5px;color:var(--faint);margin:12px 0 0}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media (max-width:480px){
   .card-top{flex-direction:column;gap:8px}
@@ -186,6 +234,10 @@ h1.title{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,4
       </div>
       <button class="logout" type="button" id="logout">Sign out</button>
     </div>
+    <nav class="views" role="group" aria-label="Section">
+      <button class="view-btn" type="button" data-view="replies" aria-pressed="true">Replies</button>
+      <button class="view-btn" type="button" data-view="schedule" aria-pressed="false">Shift schedule</button>
+    </nav>
     <p class="sub">Standard customer responses for complaints registered on the BPO CMS. Search, then copy the reply straight into the ticket.</p>
     <p class="sig-note">
       <label for="agent">Every reply is copied signed</label>
@@ -198,6 +250,7 @@ h1.title{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,4
     </p>
   </header>
 
+  <div id="view-replies">
   <div class="rail">
     <label class="searchbox">
       <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="9" r="6"/><path d="M13.5 13.5 17 17" stroke-linecap="round"/></svg>
@@ -215,6 +268,29 @@ h1.title{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,4
 
   <main id="list"></main>
   <p class="empty" id="empty" hidden>No reply matches that search.</p>
+  </div>
+
+  <div id="view-schedule" hidden>
+    <div class="sched-legend">
+      <span><i class="sw" data-s="Morning"></i>Morning</span>
+      <span><i class="sw" data-s="Evening"></i>Evening</span>
+      <span><i class="sw" data-s="Night"></i>Night</span>
+      <span><i class="sw" data-s="OFF"></i>Off</span>
+    </div>
+    <div class="sched-wrap">
+      <table class="sched">
+        <thead>
+          <tr>
+            <th>Name</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th>
+            <th>Fri</th><th>Sat</th><th>Sun</th><th>Weekly off</th>
+          </tr>
+        </thead>
+        <tbody id="schedBody"></tbody>
+        <tfoot id="schedCover"></tfoot>
+      </table>
+    </div>
+    <p class="sched-note">Cover rows count how many people are on each shift that day.</p>
+  </div>
 </div>
 
 <script>
@@ -576,6 +652,79 @@ function sizeAgentInput(){
   const n = Math.max(8, Math.min(30, agentEl.value.length || 9));
   agentEl.style.width = n + "ch";
 }
+
+/* ---------- shift schedule ---------- */
+const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+/* Contact numbers are deliberately not published here — this page is on a
+   public URL and the numbers belong to the team, not to this site. */
+const ROSTER = [
+  { n:"Asif",         t:"Team Lead",       d:["Morning","Morning","Morning","Morning","Morning","OFF","OFF"],     o:"Sat, Sun" },
+  { n:"Sohail",       t:"Night preferred", d:["Night","Night","Night","Night","Night","OFF","OFF"],               o:"Sat, Sun" },
+  { n:"Usaid",        t:"",                d:["Evening","Evening","Evening","OFF","OFF","Morning","Morning"],     o:"Thu, Fri" },
+  { n:"Abdur Rahman", t:"Night preferred", d:["Evening","Evening","Night","OFF","OFF","Night","Night"],           o:"Thu, Fri" },
+  { n:"Shahbaz",      t:"No DB",           d:["Morning","OFF","OFF","Morning","Morning","Morning","Morning"],     o:"Tue, Wed" },
+  { n:"Sajeel",       t:"",                d:["OFF","OFF","Evening","Evening","Evening","Evening","Evening"],     o:"Mon, Tue" },
+  { n:"Inam Ullah",   t:"No DB",           d:["Evening","OFF","OFF","Evening","Evening","Evening","Evening"],     o:"Tue, Wed" },
+  { n:"Mujtaba",      t:"No DB",           d:["Night","Morning","Morning","OFF","OFF","Night","Night"],           o:"Thu, Fri" }
+];
+const SHIFT_VAR = { Morning:"m", Evening:"e", Night:"n", OFF:"o" };
+
+const schedBody = document.getElementById("schedBody");
+for (const r of ROSTER) {
+  const tr = document.createElement("tr");
+
+  const who = document.createElement("td");
+  const nm = document.createElement("div"); nm.className = "sn"; nm.textContent = r.n;
+  who.append(nm);
+  if (r.t) { const t = document.createElement("div"); t.className = "st"; t.textContent = r.t; who.append(t); }
+  tr.append(who);
+
+  for (const s of r.d) {
+    const td = document.createElement("td");
+    td.className = "shift";
+    const k = SHIFT_VAR[s];
+    td.style.background = "var(--sh-" + k + "-bg)";
+    td.style.color = "var(--sh-" + k + "-fg)";
+    td.textContent = s;
+    tr.append(td);
+  }
+
+  const off = document.createElement("td");
+  off.className = "off-col";
+  off.textContent = r.o;
+  tr.append(off);
+
+  schedBody.append(tr);
+}
+
+const schedCover = document.getElementById("schedCover");
+for (const shift of ["Morning","Evening","Night"]) {
+  const tr = document.createElement("tr");
+  const lab = document.createElement("td");
+  lab.textContent = shift + " cover";
+  tr.append(lab);
+  for (let i = 0; i < 7; i++) {
+    const n = ROSTER.filter(r => r.d[i] === shift).length;
+    const td = document.createElement("td");
+    td.className = n ? "cv" : "cv zero";
+    if (n) td.style.color = "var(--sh-" + SHIFT_VAR[shift] + "-fg)";
+    td.textContent = String(n);
+    tr.append(td);
+  }
+  tr.append(document.createElement("td"));
+  schedCover.append(tr);
+}
+
+/* ---------- view switcher ---------- */
+const views = { replies: document.getElementById("view-replies"), schedule: document.getElementById("view-schedule") };
+document.querySelectorAll(".view-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const want = btn.dataset.view;
+    document.querySelectorAll(".view-btn").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+    for (const [k, el] of Object.entries(views)) el.hidden = k !== want;
+    if (want === "replies") qEl.focus();
+  });
+});
 
 apply();
 if (signedIn()) showApp();
