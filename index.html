@@ -169,6 +169,42 @@ tfoot td.cv{font-weight:600;font-variant-numeric:tabular-nums}
 tfoot td.cv.zero{color:var(--faint);font-weight:400}
 .sched-note{font-size:12.5px;color:var(--faint);margin:12px 0 0}
 
+/* ---------- backlog builder ---------- */
+.bl-meta{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:26px 0 18px}
+.bl-meta label{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--muted)}
+.bl-meta input{font:inherit;font-size:13.5px;color:var(--fg);background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:7px 10px}
+.bl-meta input:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+.bl-total{font-family:var(--f-mono);font-size:12.5px;color:var(--faint);margin-left:auto}
+.bl-btn{font:inherit;font-size:13px;font-weight:500;cursor:pointer;background:var(--surface);color:var(--muted);border:1px solid var(--border);border-radius:7px;padding:7px 14px}
+.bl-btn:hover{color:var(--fg)}
+.bl-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.bl-btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.bl-btn.primary:hover{opacity:.9;color:var(--accent-ink)}
+
+#blCats{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-bottom:12px;align-items:start}
+.bl-cat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 13px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.bl-cat-top{display:flex;align-items:center;gap:8px}
+.bl-label{flex:1;min-width:0;font:inherit;font-size:14px;font-weight:600;color:var(--fg);background:transparent;border:none;border-bottom:1px solid transparent;padding:3px 0}
+.bl-label:hover{border-bottom-color:var(--border)}
+.bl-label:focus{outline:none;border-bottom-color:var(--accent)}
+.bl-count{font-family:var(--f-mono);font-size:12px;color:var(--accent);flex:none;min-width:3ch;text-align:right}
+.bl-del{flex:none;font:inherit;font-size:16px;line-height:1;cursor:pointer;background:transparent;color:var(--faint);border:none;padding:2px 5px;border-radius:5px}
+.bl-del:hover{color:var(--danger);background:var(--surface-2)}
+.bl-del:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.bl-nums{font-family:var(--f-mono);font-size:12.5px;line-height:1.6;color:var(--fg);background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:9px 10px;min-height:92px;resize:vertical;width:100%}
+.bl-nums:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+.bl-nums::placeholder{color:var(--faint)}
+
+.bl-h{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:30px 0 12px}
+.bl-preview-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+table.blsheet{border-collapse:collapse;font-size:12.5px;font-family:var(--f-mono);width:100%}
+table.blsheet td{border:1px solid #9aa89f;padding:6px 8px;text-align:center;color:#15150f;white-space:nowrap}
+table.blsheet td.bl-title{background:#f8cbcb;font-weight:700;font-size:14px;font-family:var(--f-body)}
+table.blsheet td.bl-head{background:#d6e4f7;font-weight:700;font-size:13px;font-family:var(--f-body)}
+table.blsheet td.bl-num{background:#d9ead3}
+table.blsheet td.bl-pad{background:#d9ead3}
+.bl-empty{padding:34px 20px;text-align:center;color:var(--muted);font-size:13.5px}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media (max-width:520px){
   .wrap{padding-inline:16px}
@@ -210,6 +246,7 @@ tfoot td.cv.zero{color:var(--faint);font-weight:400}
     <nav class="views" role="group" aria-label="Section">
       <button class="view-btn" type="button" data-view="replies" aria-pressed="true">Replies</button>
       <button class="view-btn" type="button" data-view="schedule" aria-pressed="false">Shift schedule</button>
+      <button class="view-btn" type="button" data-view="backlog" aria-pressed="false">Backlog sheet</button>
     </nav>
     <p class="sub">Standard customer responses for complaints registered on the BPO CMS. Search, then copy the reply straight into the ticket.</p>
     <div class="ctl">
@@ -264,6 +301,23 @@ tfoot td.cv.zero{color:var(--faint);font-weight:400}
       </table>
     </div>
     <p class="sched-note">Cover rows count how many people are on each shift that day.</p>
+  </div>
+
+  <div id="view-backlog" hidden>
+    <div class="bl-meta">
+      <label>Date <input type="date" id="blDate"></label>
+      <label>Prepared by <input type="text" id="blName" placeholder="Your name"></label>
+      <span class="bl-total" id="blTotal"></span>
+      <button type="button" class="bl-btn primary" id="blDownload">Download for Excel</button>
+      <button type="button" class="bl-btn" id="blClear">Clear all</button>
+    </div>
+
+    <div id="blCats"></div>
+    <button type="button" class="bl-btn" id="blAdd">+ Add category</button>
+
+    <h3 class="bl-h">Preview</h3>
+    <div class="bl-preview-wrap"><div id="blPreview"></div></div>
+    <p class="sched-note">Paste ticket numbers in any form — commas, spaces or new lines. Duplicates inside a category are dropped automatically. The download opens in Excel with the colours intact.</p>
   </div>
 </div>
 
@@ -759,8 +813,246 @@ for (const shift of ["Morning","Evening","Night"]) {
   schedCover.append(tr);
 }
 
+/* ---------- backlog sheet builder ---------- */
+const BL_KEY = "frr.backlog";
+const BL_COLS = 11;
+const BL_DEFAULT = [
+  { label:"Forwarded / Vehicle Not Found", nums:"" },
+  { label:"SIM Not on Name",               nums:"" },
+  { label:"NADRA Not Confirmed",           nums:"" },
+  { label:"Token Not Received",            nums:"" },
+  { label:"Resolved",                      nums:"" }
+];
+
+const blCats = document.getElementById("blCats");
+const blDate = document.getElementById("blDate");
+const blName = document.getElementById("blName");
+const blPreview = document.getElementById("blPreview");
+const blTotal = document.getElementById("blTotal");
+
+function blLoad(){
+  try {
+    const raw = localStorage.getItem(BL_KEY);
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (Array.isArray(d.cats) && d.cats.length) return d;
+    }
+  } catch (e) {}
+  return { date:"", name:"", cats: BL_DEFAULT.map(c => ({ ...c })) };
+}
+function blSave(){
+  try {
+    localStorage.setItem(BL_KEY, JSON.stringify({
+      date: blDate.value,
+      name: blName.value,
+      cats: [...blCats.querySelectorAll(".bl-cat")].map(el => ({
+        label: el.querySelector(".bl-label").value,
+        nums: el.querySelector(".bl-nums").value
+      }))
+    }));
+  } catch (e) {}
+}
+
+function parseNums(text){
+  const out = [], seen = new Set();
+  for (const m of String(text).match(/\d+/g) || []) {
+    if (!seen.has(m)) { seen.add(m); out.push(m); }
+  }
+  return out;
+}
+
+function blAddCat(label, nums){
+  const el = document.createElement("div");
+  el.className = "bl-cat";
+
+  const top = document.createElement("div");
+  top.className = "bl-cat-top";
+
+  const lab = document.createElement("input");
+  lab.type = "text";
+  lab.className = "bl-label";
+  lab.value = label || "";
+  lab.placeholder = "Category name";
+  lab.setAttribute("aria-label", "Category name");
+
+  const cnt = document.createElement("span");
+  cnt.className = "bl-count";
+
+  const del = document.createElement("button");
+  del.type = "button";
+  del.className = "bl-del";
+  del.textContent = "×";
+  del.title = "Remove category";
+  del.setAttribute("aria-label", "Remove category");
+  del.addEventListener("click", () => { el.remove(); blRender(); blSave(); });
+
+  top.append(lab, cnt, del);
+
+  const ta = document.createElement("textarea");
+  ta.className = "bl-nums";
+  ta.value = nums || "";
+  ta.placeholder = "202528, 202564, 202633 ...";
+  ta.setAttribute("aria-label", "Ticket numbers");
+
+  el.append(top, ta);
+  blCats.append(el);
+
+  const onChange = () => { blRender(); blSave(); };
+  lab.addEventListener("input", onChange);
+  ta.addEventListener("input", onChange);
+  return el;
+}
+
+function blCollect(){
+  return [...blCats.querySelectorAll(".bl-cat")].map(el => ({
+    label: el.querySelector(".bl-label").value.trim(),
+    nums: parseNums(el.querySelector(".bl-nums").value),
+    el
+  }));
+}
+
+function blTitleText(){
+  const name = blName.value.trim();
+  let datePart = "";
+  if (blDate.value) {
+    const d = new Date(blDate.value + "T00:00:00");
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    datePart = d.getDate() + ", " + months[d.getMonth()] + ", " + d.getFullYear();
+  }
+  return datePart + (name ? "  (" + name + ")" : "");
+}
+
+function blRender(){
+  const cats = blCollect();
+  let grand = 0;
+  for (const c of cats) {
+    c.el.querySelector(".bl-count").textContent = c.nums.length ? c.nums.length : "";
+    grand += c.nums.length;
+  }
+  blTotal.textContent = grand ? grand + " tickets" : "";
+
+  const filled = cats.filter(c => c.nums.length);
+  blPreview.textContent = "";
+  if (!filled.length) {
+    const p = document.createElement("p");
+    p.className = "bl-empty";
+    p.textContent = "Paste ticket numbers above and the sheet appears here.";
+    blPreview.append(p);
+    return;
+  }
+
+  const table = document.createElement("table");
+  table.className = "blsheet";
+  const tb = document.createElement("tbody");
+
+  const trT = document.createElement("tr");
+  const tdT = document.createElement("td");
+  tdT.className = "bl-title";
+  tdT.colSpan = BL_COLS;
+  tdT.textContent = blTitleText();
+  trT.append(tdT);
+  tb.append(trT);
+
+  for (const c of filled) {
+    const trH = document.createElement("tr");
+    const tdH = document.createElement("td");
+    tdH.className = "bl-head";
+    tdH.colSpan = BL_COLS;
+    tdH.textContent = c.label + "  (" + c.nums.length + ")";
+    trH.append(tdH);
+    tb.append(trH);
+
+    for (let i = 0; i < c.nums.length; i += BL_COLS) {
+      const chunk = c.nums.slice(i, i + BL_COLS);
+      const tr = document.createElement("tr");
+      for (let j = 0; j < BL_COLS; j++) {
+        const td = document.createElement("td");
+        if (j < chunk.length) { td.className = "bl-num"; td.textContent = chunk[j]; }
+        else { td.className = "bl-pad"; }
+        tr.append(td);
+      }
+      tb.append(tr);
+    }
+  }
+
+  table.append(tb);
+  blPreview.append(table);
+}
+
+function blSheetHtml(){
+  const cats = blCollect().filter(c => c.nums.length);
+  const esc = s => String(s).replace(/[&<>]/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;" }[ch]));
+  const B = "border:1px solid #000;padding:5px 8px;text-align:center;font-family:Arial,sans-serif;";
+  let rows = '<tr><td colspan="' + BL_COLS + '" style="' + B + 'background:#F8CBCB;font-weight:bold;font-size:14pt">' + esc(blTitleText()) + "</td></tr>";
+
+  for (const c of cats) {
+    rows += '<tr><td colspan="' + BL_COLS + '" style="' + B + 'background:#D6E4F7;font-weight:bold;font-size:12pt">' + esc(c.label) + "  (" + c.nums.length + ")</td></tr>";
+    for (let i = 0; i < c.nums.length; i += BL_COLS) {
+      const chunk = c.nums.slice(i, i + BL_COLS);
+      rows += "<tr>";
+      for (let j = 0; j < BL_COLS; j++) {
+        rows += '<td style="' + B + 'background:#D9EAD3">' + (j < chunk.length ? chunk[j] : "") + "</td>";
+      }
+      rows += "</tr>";
+    }
+    rows += "<tr>" + '<td style="border:none"></td>'.repeat(BL_COLS) + "</tr>";
+  }
+
+  return '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8">' +
+    "<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>" +
+    "<x:Name>Backlog</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>" +
+    "</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->" +
+    "</head><body><table>" + rows + "</table></body></html>";
+}
+
+document.getElementById("blDownload").addEventListener("click", () => {
+  const cats = blCollect().filter(c => c.nums.length);
+  if (!cats.length) { alertInline("Add some ticket numbers first."); return; }
+  const blob = new Blob(["﻿" + blSheetHtml()], { type: "application/vnd.ms-excel" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Backlog-" + (blDate.value || "sheet") + ".xls";
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+});
+
+function alertInline(msg){
+  const t = blTotal.textContent;
+  blTotal.textContent = msg;
+  setTimeout(() => { blTotal.textContent = t; }, 2200);
+}
+
+document.getElementById("blAdd").addEventListener("click", () => {
+  const el = blAddCat("", "");
+  el.querySelector(".bl-label").focus();
+  blSave();
+});
+
+document.getElementById("blClear").addEventListener("click", () => {
+  blCats.querySelectorAll(".bl-nums").forEach(t => { t.value = ""; });
+  blRender();
+  blSave();
+});
+
+blDate.addEventListener("input", () => { blRender(); blSave(); });
+blName.addEventListener("input", () => { blRender(); blSave(); });
+
+(function blInit(){
+  const saved = blLoad();
+  blDate.value = saved.date || new Date().toISOString().slice(0, 10);
+  blName.value = saved.name || agentName;
+  for (const c of saved.cats) blAddCat(c.label, c.nums);
+  blRender();
+})();
+
 /* ---------- view switcher ---------- */
-const views = { replies: document.getElementById("view-replies"), schedule: document.getElementById("view-schedule") };
+const views = {
+  replies: document.getElementById("view-replies"),
+  schedule: document.getElementById("view-schedule"),
+  backlog: document.getElementById("view-backlog")
+};
 document.querySelectorAll(".view-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const want = btn.dataset.view;
