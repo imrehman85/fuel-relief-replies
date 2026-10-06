@@ -426,7 +426,19 @@ const GROUPS = [
     { t:"Vehicle Ownership Transferred",
       b:"As per the Excise record, this vehicle is registered in another person's name. If you have purchased the vehicle, please complete the ownership transfer with the Excise Department first, then register again. Thank you.",
       bu:"Excise record ke mutabiq ye gari kisi aur ke naam par registered hai. Agar aap ne ye gari kharidi hai to pehle Excise Department se ownership transfer mukammal karwayein, phir dobara register karein. Shukriya.",
-      w:"EDR still shows the previous owner - transfer has not been recorded." }
+      w:"EDR still shows the previous owner - transfer has not been recorded." },
+    { t:"Bank-Leased Vehicle",
+      b:"As per the Excise record, this vehicle is under a bank lease and is not registered in your name. Vehicle ownership records are maintained by the Excise Department and cannot be changed under this scheme. Please complete the ownership transfer with your bank and the Excise Department first, then register again. Thank you.",
+      bu:"Excise record ke mutabiq ye gari bank lease par hai aur aapke naam par registered nahi. Gari ki ownership ka record Excise Department rakhta hai aur is scheme ke zariye use tabdeel nahi kiya ja sakta. Baraye meharbani pehle apne bank aur Excise Department se ownership transfer mukammal karwayein, phir dobara register karein. Shukriya.",
+      w:"Customer asks for the lease or ownership status to be removed. Not something the scheme can change." },
+    { t:"Registration Cannot Be Reverted",
+      b:"Once a vehicle has been registered against a mobile number, the registration cannot be reverted or changed. Please continue using the same SIM used at the time of registration. Thank you.",
+      bu:"Ek baar gari kisi mobile number par register ho jaye to registration wapas ya tabdeel nahi ki ja sakti. Baraye meharbani wahi SIM istemal karte rahein jo registration ke waqt istemal ki thi. Shukriya.",
+      w:"Customer wants to move the registration to a different SIM or undo it." },
+    { t:"Already Registered - SIM Must Match CNIC",
+      b:"A vehicle is already registered against this CNIC, and only one vehicle can be registered per CNIC. Please also note that the SIM used must be registered on the same CNIC as the vehicle owner. If this registration was not made by you, kindly contact the helpline with your CNIC for verification. Thank you.",
+      bu:"Is CNIC par pehle se ek gari registered hai, aur ek CNIC par sirf ek hi gari register ho sakti hai. Ye bhi yaad rahe ke jo SIM istemal ho wo usi CNIC par registered honi chahiye jo gari ke malik ka hai. Agar ye registration aap ne nahi ki to apna CNIC le kar helpline par rabta karein. Shukriya.",
+      w:"Already-registered error where the customer insists it was not them - sends them back for verification." }
   ]},
 
   { key:"gen", label:"Token Generation", color:"var(--gen)", items:[
@@ -453,7 +465,19 @@ const GROUPS = [
     { t:"Token Not Yet Generated",
       b:"Your token has not been generated yet. Tokens are issued as per the scheme schedule against your registered vehicle. Please send TOK again from your registered mobile number after some time. Thank you.",
       bu:"Aapka token abhi jari nahi hua. Token scheme ke shedule ke mutabiq aapki registered gari par jari hote hain. Baraye meharbani kuch der baad apne registered number se dobara TOK bhejein. Shukriya.",
-      w:"Registration is complete but no token exists against the CNIC yet." }
+      w:"Registration is complete but no token exists against the CNIC yet." },
+    { t:"Second Token - Send TOK",
+      b:"Your first token has been used successfully. For the second token, please send TOK from your registered mobile number and you will receive it. Thank you.",
+      bu:"Aapka pehla token kamyabi se istemal ho chuka hai. Doosre token ke liye apne registered mobile number se TOK likh kar bhejein, token mil jayega. Shukriya.",
+      w:"First token redeemed, customer is waiting for the second one to arrive by itself." },
+    { t:"Send TOK From Registered Number",
+      b:"Please send TOK from the same mobile number used at the time of registration, and you will receive your token. Thank you.",
+      bu:"Jis number se registration ki thi, usi number se TOK likh kar bhejein - token mil jayega. Shukriya.",
+      w:"Short reply when the customer is sending TOK from a different number." },
+    { t:"Token Lost After Factory Reset",
+      b:"Your token has already been generated. As the message is no longer available on your phone, please send TOK from your registered mobile number and your token details will be sent again. There is no need to register again. Thank you.",
+      bu:"Aapka token pehle hi jari ho chuka hai. Chunke message aapke phone par mojood nahi raha, baraye meharbani apne registered mobile number se TOK likh kar bhejein, token ki tafseelat dobara bhej di jayengi. Dobara register karne ki zaroorat nahi. Shukriya.",
+      w:"Phone was reset or wiped and the token SMS is gone with it." }
   ]},
 
   { key:"red", label:"Token Redemption", color:"var(--red)", items:[
@@ -488,7 +512,11 @@ const GROUPS = [
     { t:"Location Not Provided",
       b:"Your complaint could not be processed as the fuel station name and location were not provided. Kindly share these details so the matter can be taken forward. Thank you.",
       bu:"Aapki shikayat process nahi ho saki kyunke petrol pump ka naam aur location faraham nahi ki gayi. Baraye meharbani ye tafseelat bata dein taake mamla aage barhaya ja sake. Shukriya.",
-      w:"Closing or holding reply when the customer never supplied the station details." }
+      w:"Closing or holding reply when the customer never supplied the station details." },
+    { t:"Token Sent and Already Used",
+      b:"As per our record, your token was sent successfully and has already been redeemed. If you did not use it yourself, kindly visit the fuel station where it was redeemed, or contact the helpline with your token number. Thank you.",
+      bu:"Hamare record ke mutabiq aapka token kamyabi se bheja gaya tha aur istemal bhi ho chuka hai. Agar aap ne khud istemal nahi kiya to us petrol pump par jayein jahan ye redeem hua, ya apna token number le kar helpline par rabta karein. Shukriya.",
+      w:"Record shows both delivery and redemption, but the customer denies receiving or using it." }
   ]},
 
   { key:"gnl", label:"Status & Closing", color:"var(--gnl)", items:[
@@ -507,7 +535,11 @@ const GROUPS = [
     { t:"Information Confirmed - No Action Required",
       b:"Your details have been verified and no issue has been found in our record. Please try again from your registered mobile number. Thank you.",
       bu:"Aapki tafseelat ki tasdeeq kar li gayi hai aur hamare record mein koi masla nahi mila. Baraye meharbani apne registered mobile number se dobara koshish karein. Shukriya.",
-      w:"EDR check comes back clean and the complaint needs no further action." }
+      w:"EDR check comes back clean and the complaint needs no further action." },
+    { t:"Send HELP for Instructions",
+      b:"Please send HELP from your registered mobile number and follow the instructions received in reply. Thank you.",
+      bu:"Baraye meharbani apne registered mobile number se HELP likh kar bhejein aur jo hidayat jawab mein milein un par amal karein. Shukriya.",
+      w:"Customer is unsure of the correct format or next step - point them at the system's own instructions." }
   ]}
 ];
 
