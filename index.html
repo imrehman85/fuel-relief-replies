@@ -205,6 +205,18 @@ table.blsheet td.bl-num{background:#d9ead3}
 table.blsheet td.bl-pad{background:#d9ead3}
 .bl-empty{padding:34px 20px;text-align:center;color:var(--muted);font-size:13.5px}
 
+.bl-warn{
+  margin-top:24px;border:1px solid var(--danger);border-left:3px solid var(--danger);
+  border-radius:9px;padding:13px 15px;background:var(--surface);
+  display:flex;flex-direction:column;gap:7px
+}
+.bl-warn b{color:var(--danger);font-size:13.5px;font-weight:600}
+.bl-warn ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.bl-warn li{font-size:12.5px;color:var(--muted)}
+.bl-warn code{font-family:var(--f-mono);color:var(--fg);background:var(--surface-2);padding:1px 6px;border-radius:4px}
+.bl-cat.conflict{border-color:var(--danger)}
+table.blsheet td.bl-dupe{background:#f6c9c0;font-weight:700;box-shadow:inset 0 0 0 2px #a8341f}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media (max-width:520px){
   .wrap{padding-inline:16px}
@@ -314,6 +326,8 @@ table.blsheet td.bl-pad{background:#d9ead3}
 
     <div id="blCats"></div>
     <button type="button" class="bl-btn" id="blAdd">+ Add category</button>
+
+    <div class="bl-warn" id="blWarn" hidden></div>
 
     <h3 class="bl-h">Preview</h3>
     <div class="bl-preview-wrap"><div id="blPreview"></div></div>
@@ -829,6 +843,7 @@ const blDate = document.getElementById("blDate");
 const blName = document.getElementById("blName");
 const blPreview = document.getElementById("blPreview");
 const blTotal = document.getElementById("blTotal");
+let blDownloadArmed = false;
 
 function blLoad(){
   try {
@@ -922,6 +937,20 @@ function blTitleText(){
   return datePart + (name ? "  (" + name + ")" : "");
 }
 
+/* A ticket belongs in one category only. Flag anything claimed by two. */
+function blConflicts(cats){
+  const where = new Map();
+  for (const c of cats) {
+    for (const n of c.nums) {
+      if (!where.has(n)) where.set(n, []);
+      where.get(n).push(c.label || "(unnamed)");
+    }
+  }
+  const out = [];
+  for (const [n, labels] of where) if (labels.length > 1) out.push({ num:n, labels });
+  return out;
+}
+
 function blRender(){
   const cats = blCollect();
   let grand = 0;
@@ -929,7 +958,41 @@ function blRender(){
     c.el.querySelector(".bl-count").textContent = c.nums.length ? c.nums.length : "";
     grand += c.nums.length;
   }
-  blTotal.textContent = grand ? grand + " tickets" : "";
+
+  const conflicts = blConflicts(cats);
+  const dupeSet = new Set(conflicts.map(c => c.num));
+  const badLabels = new Set(conflicts.flatMap(c => c.labels));
+  for (const c of cats) c.el.classList.toggle("conflict", badLabels.has(c.label || "(unnamed)"));
+
+  const warn = document.getElementById("blWarn");
+  warn.textContent = "";
+  if (conflicts.length) {
+    warn.hidden = false;
+    const b = document.createElement("b");
+    b.textContent = conflicts.length === 1
+      ? "1 ticket appears in more than one category."
+      : conflicts.length + " tickets appear in more than one category.";
+    const ul = document.createElement("ul");
+    for (const c of conflicts.slice(0, 12)) {
+      const li = document.createElement("li");
+      const code = document.createElement("code");
+      code.textContent = c.num;
+      li.append(code, document.createTextNode(" — " + c.labels.join(", ")));
+      ul.append(li);
+    }
+    if (conflicts.length > 12) {
+      const li = document.createElement("li");
+      li.textContent = "… and " + (conflicts.length - 12) + " more.";
+      ul.append(li);
+    }
+    warn.append(b, ul);
+  } else {
+    warn.hidden = true;
+  }
+
+  blTotal.textContent = grand
+    ? grand + " tickets" + (conflicts.length ? " · " + conflicts.length + " duplicated" : "")
+    : "";
 
   const filled = cats.filter(c => c.nums.length);
   blPreview.textContent = "";
@@ -967,8 +1030,13 @@ function blRender(){
       const tr = document.createElement("tr");
       for (let j = 0; j < BL_COLS; j++) {
         const td = document.createElement("td");
-        if (j < chunk.length) { td.className = "bl-num"; td.textContent = chunk[j]; }
-        else { td.className = "bl-pad"; }
+        if (j < chunk.length) {
+          td.className = dupeSet.has(chunk[j]) ? "bl-num bl-dupe" : "bl-num";
+          td.textContent = chunk[j];
+          if (dupeSet.has(chunk[j])) td.title = "Also listed in another category";
+        } else {
+          td.className = "bl-pad";
+        }
         tr.append(td);
       }
       tb.append(tr);
@@ -1006,8 +1074,17 @@ function blSheetHtml(){
 }
 
 document.getElementById("blDownload").addEventListener("click", () => {
-  const cats = blCollect().filter(c => c.nums.length);
+  const all = blCollect();
+  const cats = all.filter(c => c.nums.length);
   if (!cats.length) { alertInline("Add some ticket numbers first."); return; }
+  const conflicts = blConflicts(all);
+  if (conflicts.length && !blDownloadArmed) {
+    blDownloadArmed = true;
+    alertInline(conflicts.length + " duplicated — click again to download anyway");
+    setTimeout(() => { blDownloadArmed = false; }, 6000);
+    return;
+  }
+  blDownloadArmed = false;
   const blob = new Blob(["﻿" + blSheetHtml()], { type: "application/vnd.ms-excel" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
