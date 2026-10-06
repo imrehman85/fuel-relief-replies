@@ -67,87 +67,73 @@ body{
   border:1px solid var(--border);border-radius:12px;padding:28px 26px;
   display:flex;flex-direction:column;gap:16px
 }
-.gate-eyebrow{
-  font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--accent);margin:0
-}
-.gate-card h1{
-  font-family:var(--f-display);font-weight:700;font-size:26px;
-  margin:0;letter-spacing:-.01em
-}
+.gate-eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0}
+.gate-card h1{font-family:var(--f-display);font-weight:700;font-size:26px;margin:0;letter-spacing:-.01em}
 .field{display:flex;flex-direction:column;gap:6px}
 .field label{font-size:13px;font-weight:500;color:var(--muted)}
-.field input{
-  font:inherit;font-size:15px;color:var(--fg);background:var(--bg);
-  border:1px solid var(--border);border-radius:8px;padding:10px 12px
-}
+.field input{font:inherit;font-size:15px;color:var(--fg);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
 .field input:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
-.gate button{
-  font:inherit;font-size:15px;font-weight:600;cursor:pointer;
-  background:var(--accent);color:var(--accent-ink);border:none;
-  border-radius:8px;padding:11px 16px
-}
+.gate button{font:inherit;font-size:15px;font-weight:600;cursor:pointer;background:var(--accent);color:var(--accent-ink);border:none;border-radius:8px;padding:11px 16px}
 .gate button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .err{color:var(--danger);font-size:13px;margin:0;min-height:1.2em}
 
-/* ---------- app ---------- */
-.wrap{max-width:820px;margin:0 auto;padding-inline:20px;padding-block:0 64px}
-.mast{padding-block:30px 18px;border-bottom:1px solid var(--border)}
+/* ---------- app shell ---------- */
+.wrap{max-width:1680px;margin:0 auto;padding-inline:24px;padding-block:0 64px}
+.mast{padding-block:28px 16px;border-bottom:1px solid var(--border)}
 .mast-top{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
 .mast-top > div{flex:1;min-width:0}
 .eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
-h1.title{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,40px);line-height:1.05;letter-spacing:-.01em;margin:0;text-wrap:balance}
-.sub{color:var(--muted);margin:10px 0 0;max-width:56ch}
-.sig-note{margin:14px 0 0;font-size:13px;color:var(--faint);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.sig-field{
-  display:inline-flex;align-items:center;gap:0;
-  background:var(--surface-2);border:1px solid var(--border);border-radius:6px;
-  padding:2px 8px 2px 8px;transition:border-color .12s
-}
+h1.title{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1.05;letter-spacing:-.01em;margin:0}
+.sub{color:var(--muted);margin:10px 0 0;max-width:60ch}
+.logout{flex:none;font:inherit;font-size:13px;cursor:pointer;background:var(--surface);color:var(--muted);border:1px solid var(--border);border-radius:7px;padding:6px 12px}
+.logout:hover{color:var(--fg)}
+.logout:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.views{display:flex;gap:6px;margin-top:16px}
+.view-btn{font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;background:transparent;color:var(--muted);border:none;border-bottom:2px solid transparent;padding:6px 2px;margin-right:14px}
+.view-btn:hover{color:var(--fg)}
+.view-btn[aria-pressed="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.view-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+
+/* ---------- controls row ---------- */
+.ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 0;font-size:13px;color:var(--faint)}
+.sig-field{display:inline-flex;align-items:center;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:2px 8px;transition:border-color .12s}
 .sig-field:focus-within{border-color:var(--accent)}
 .sig-by{font-family:var(--f-mono);font-size:12.5px;color:var(--faint);padding-right:5px}
-#agent{
-  font-family:var(--f-mono);font-size:12.5px;color:var(--fg);
-  background:transparent;border:none;padding:3px 0;width:13ch;min-width:8ch
-}
+#agent{font-family:var(--f-mono);font-size:12.5px;color:var(--fg);background:transparent;border:none;padding:3px 0;width:13ch;min-width:8ch}
 #agent:focus{outline:none}
 #agent::placeholder{color:var(--faint)}
 .sig-field svg{width:12px;height:12px;color:var(--faint);flex:none;margin-left:4px}
 .sig-field:focus-within svg{color:var(--accent)}
-.sig-saved{font-size:12px;color:var(--accent);min-width:7ch}
-.logout{
-  flex:none;font:inherit;font-size:13px;cursor:pointer;
-  background:var(--surface);color:var(--muted);border:1px solid var(--border);
-  border-radius:7px;padding:6px 12px
-}
-.logout:hover{color:var(--fg)}
-.logout:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sig-saved{font-size:12px;color:var(--accent);min-width:6ch}
 
-.rail{
-  position:sticky;top:0;z-index:20;background:var(--bg);
-  padding-block:14px 12px;border-bottom:1px solid var(--border);
-  display:flex;flex-direction:column;gap:11px
-}
-.searchbox{position:relative;display:flex;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;background:var(--surface-2)}
+.seg button{font:inherit;font-size:12.5px;font-weight:500;cursor:pointer;background:transparent;color:var(--muted);border:none;padding:6px 13px}
+.seg button:hover{color:var(--fg)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+
+/* ---------- search rail ---------- */
+.rail{position:sticky;top:0;z-index:20;background:var(--bg);padding-block:14px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.searchbox{position:relative;display:flex;align-items:center;flex:1 1 300px;min-width:240px}
 .searchbox svg{position:absolute;left:13px;width:16px;height:16px;color:var(--faint);pointer-events:none}
 #q{width:100%;font:inherit;font-size:15px;color:var(--fg);background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px 13px 11px 38px}
 #q::placeholder{color:var(--faint)}
 #q:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
-
 .chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center;min-width:0}
 .chip{font:inherit;font-size:13px;font-weight:500;cursor:pointer;background:var(--surface);color:var(--muted);border:1px solid var(--border);border-radius:99px;padding:5px 12px;transition:background .12s,color .12s,border-color .12s}
 .chip:hover{color:var(--fg)}
 .chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.count{margin-left:auto;font-family:var(--f-mono);font-size:12px;color:var(--faint);white-space:nowrap}
+.count{font-family:var(--f-mono);font-size:12px;color:var(--faint);white-space:nowrap;margin-left:auto}
 
-.group{margin-top:30px}
+/* ---------- reply cards ---------- */
+.group{margin-top:28px}
 .group-head{display:flex;align-items:baseline;gap:10px;margin:0 0 12px}
 .group-head h2{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin:0;color:var(--kc,var(--muted))}
 .group-rule{flex:1;height:1px;background:var(--border);min-width:0}
-.cards{display:flex;flex-direction:column;gap:10px}
-
-.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;border-left:3px solid var(--kc,var(--accent));padding:15px 16px;display:flex;flex-direction:column;gap:9px;min-width:0}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:12px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;border-left:3px solid var(--kc,var(--accent));padding:15px 16px;display:flex;flex-direction:column;gap:9px;min-width:0;height:100%}
 .card-top{display:flex;align-items:flex-start;gap:12px}
 .card h3{font-family:var(--f-body);font-weight:600;font-size:15px;margin:0;flex:1;min-width:0;letter-spacing:-.005em}
 .copy{flex:none;font:inherit;font-size:12.5px;font-weight:500;cursor:pointer;background:var(--surface-2);color:var(--muted);border:1px solid var(--border);border-radius:7px;padding:5px 11px;display:inline-flex;align-items:center;gap:6px;transition:background .12s,color .12s}
@@ -155,22 +141,11 @@ h1.title{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,4
 .copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .copy.done{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .copy svg{width:13px;height:13px}
-.body{margin:0;color:var(--fg);max-width:66ch}
+.body{margin:0;color:var(--fg);flex:1}
 .sig{font-family:var(--f-mono);font-size:12.5px;color:var(--faint);margin:0;padding-top:2px}
 .when{font-size:12.5px;color:var(--muted);margin:0;padding-top:7px;border-top:1px dashed var(--border)}
 .when b{font-weight:600;color:var(--fg)}
 .empty{text-align:center;color:var(--muted);padding:48px 20px;border:1px dashed var(--border);border-radius:10px;margin-top:30px}
-
-/* ---------- view switcher ---------- */
-.views{display:flex;gap:6px;margin-top:16px}
-.view-btn{
-  font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;
-  background:transparent;color:var(--muted);border:none;
-  border-bottom:2px solid transparent;padding:6px 2px;margin-right:14px
-}
-.view-btn:hover{color:var(--fg)}
-.view-btn[aria-pressed="true"]{color:var(--accent);border-bottom-color:var(--accent)}
-.view-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
 
 /* ---------- schedule ---------- */
 .sched-legend{display:flex;gap:18px;flex-wrap:wrap;margin:26px 0 14px;font-size:12.5px;color:var(--muted)}
@@ -180,7 +155,6 @@ h1.title{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,4
 .sw[data-s="Evening"]{background:var(--sh-e-bg);border:1px solid var(--sh-e-fg)}
 .sw[data-s="Night"]{background:var(--sh-n-bg);border:1px solid var(--sh-n-fg)}
 .sw[data-s="OFF"]{background:var(--sh-o-bg);border:1px solid var(--sh-o-fg)}
-
 .sched-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
 table.sched{border-collapse:collapse;width:100%;min-width:760px;font-size:13px}
 table.sched th,table.sched td{border:1px solid var(--border);padding:9px 11px;text-align:left;white-space:nowrap}
@@ -188,7 +162,6 @@ table.sched thead th{background:var(--surface-2);font-weight:600;color:var(--fg)
 table.sched tbody td:first-child{background:var(--surface);min-width:170px;white-space:normal}
 .sn{font-weight:600;color:var(--fg)}
 .st{font-size:11.5px;color:var(--faint);margin-top:1px}
-.sp{font-family:var(--f-mono);font-size:11.5px;color:var(--accent);margin-top:2px}
 td.shift{font-weight:500}
 td.off-col{color:var(--muted);background:var(--surface)}
 tfoot td{background:var(--surface-2);font-size:12px;color:var(--muted)}
@@ -197,7 +170,9 @@ tfoot td.cv.zero{color:var(--faint);font-weight:400}
 .sched-note{font-size:12.5px;color:var(--faint);margin:12px 0 0}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-@media (max-width:480px){
+@media (max-width:520px){
+  .wrap{padding-inline:16px}
+  .cards{grid-template-columns:1fr}
   .card-top{flex-direction:column;gap:8px}
   .copy{align-self:flex-start}
   .count{width:100%;margin-left:0;text-align:right}
@@ -206,7 +181,6 @@ tfoot td.cv.zero{color:var(--faint);font-weight:400}
 </head>
 <body>
 
-<!-- ============ LOGIN ============ -->
 <div class="gate" id="gate">
   <form class="gate-card" id="loginForm" autocomplete="off">
     <p class="gate-eyebrow">PM Fuel Relief &middot; L2 Support</p>
@@ -224,7 +198,6 @@ tfoot td.cv.zero{color:var(--faint);font-weight:400}
   </form>
 </div>
 
-<!-- ============ APP ============ -->
 <div class="wrap" id="app" hidden>
   <header class="mast">
     <div class="mast-top">
@@ -239,35 +212,39 @@ tfoot td.cv.zero{color:var(--faint);font-weight:400}
       <button class="view-btn" type="button" data-view="schedule" aria-pressed="false">Shift schedule</button>
     </nav>
     <p class="sub">Standard customer responses for complaints registered on the BPO CMS. Search, then copy the reply straight into the ticket.</p>
-    <p class="sig-note">
-      <label for="agent">Every reply is copied signed</label>
+    <div class="ctl">
+      <span class="seg" role="group" aria-label="Reply language">
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="true">English</button>
+        <button type="button" class="lang-btn" data-lang="ur" aria-pressed="false">Roman Urdu</button>
+      </span>
+      <span>Signed</span>
       <span class="sig-field">
         <span class="sig-by">by</span>
         <input id="agent" type="text" maxlength="60" placeholder="Your name" aria-label="Your name for the signature" autocomplete="name">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M11 2.5 13.5 5 5.5 13H3v-2.5z" stroke-linejoin="round"/></svg>
       </span>
       <span class="sig-saved" id="sigSaved" aria-live="polite"></span>
-    </p>
+    </div>
   </header>
 
   <div id="view-replies">
-  <div class="rail">
-    <label class="searchbox">
-      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="9" r="6"/><path d="M13.5 13.5 17 17" stroke-linecap="round"/></svg>
-      <input id="q" type="search" placeholder="Search by nature, keyword, plate format&hellip;" autocomplete="off" aria-label="Search replies">
-    </label>
-    <div class="chips" role="group" aria-label="Filter by category">
-      <button class="chip" type="button" data-cat="all" aria-pressed="true">All</button>
-      <button class="chip" type="button" data-cat="reg" aria-pressed="false">Registration</button>
-      <button class="chip" type="button" data-cat="gen" aria-pressed="false">Token Generation</button>
-      <button class="chip" type="button" data-cat="red" aria-pressed="false">Token Redemption</button>
-      <button class="chip" type="button" data-cat="gnl" aria-pressed="false">Status</button>
+    <div class="rail">
+      <label class="searchbox">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="9" r="6"/><path d="M13.5 13.5 17 17" stroke-linecap="round"/></svg>
+        <input id="q" type="search" placeholder="Search by nature, keyword, plate format&hellip;" autocomplete="off" aria-label="Search replies">
+      </label>
+      <div class="chips" role="group" aria-label="Filter by category">
+        <button class="chip" type="button" data-cat="all" aria-pressed="true">All</button>
+        <button class="chip" type="button" data-cat="reg" aria-pressed="false">Registration</button>
+        <button class="chip" type="button" data-cat="gen" aria-pressed="false">Token Generation</button>
+        <button class="chip" type="button" data-cat="red" aria-pressed="false">Token Redemption</button>
+        <button class="chip" type="button" data-cat="gnl" aria-pressed="false">Status</button>
+      </div>
       <span class="count" id="count"></span>
     </div>
-  </div>
 
-  <main id="list"></main>
-  <p class="empty" id="empty" hidden>No reply matches that search.</p>
+    <main id="list"></main>
+    <p class="empty" id="empty" hidden>No reply matches that search.</p>
   </div>
 
   <div id="view-schedule" hidden>
@@ -280,10 +257,7 @@ tfoot td.cv.zero{color:var(--faint);font-weight:400}
     <div class="sched-wrap">
       <table class="sched">
         <thead>
-          <tr>
-            <th>Name</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th>
-            <th>Fri</th><th>Sat</th><th>Sun</th><th>Weekly off</th>
-          </tr>
+          <tr><th>Name</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th><th>Weekly off</th></tr>
         </thead>
         <tbody id="schedBody"></tbody>
         <tfoot id="schedCover"></tfoot>
@@ -296,7 +270,6 @@ tfoot td.cv.zero{color:var(--faint);font-weight:400}
 <script>
 /* =====================================================================
    LOGIN CREDENTIALS  --  CHANGE THESE TWO LINES
-   ---------------------------------------------------------------------
    This is a client-side gate only. Anyone who opens the page source or
    the repository can read these values. It keeps casual visitors out;
    it is NOT real security. Do not reuse a password from anywhere else.
@@ -305,38 +278,26 @@ const USERNAME = "admin";
 const PASSWORD = "CHANGE_ME";
 /* ===================================================================== */
 
-/* Signature name is per-browser: each agent sets their own, kept in
-   localStorage so it survives reloads on that machine. */
 const DEFAULT_AGENT = "Abdur Rehman";
 const AGENT_KEY = "frr.agent";
+const LANG_KEY = "frr.lang";
 const SESSION_KEY = "frr.signedin";
 
-function loadAgent(){
-  try { return localStorage.getItem(AGENT_KEY) || DEFAULT_AGENT; }
-  catch (e) { return DEFAULT_AGENT; }
-}
-function saveAgent(name){
-  try { localStorage.setItem(AGENT_KEY, name); } catch (e) {}
-}
-let agentName = loadAgent();
-function signatureLine(){
-  return agentName ? "by " + agentName : "";
-}
+function lsGet(k, fallback){ try { return localStorage.getItem(k) ?? fallback; } catch (e) { return fallback; } }
+function lsSet(k, v){ try { localStorage.setItem(k, v); } catch (e) {} }
 
-/* ---------- login handling ---------- */
+let agentName = lsGet(AGENT_KEY, DEFAULT_AGENT);
+let lang = lsGet(LANG_KEY, "en") === "ur" ? "ur" : "en";
+function signatureLine(){ return agentName ? "by " + agentName : ""; }
+
+/* ---------- login ---------- */
 const gate = document.getElementById("gate");
 const app = document.getElementById("app");
 const errEl = document.getElementById("err");
 
-function signedIn(){
-  try { return sessionStorage.getItem(SESSION_KEY) === "1"; }
-  catch (e) { return false; }
-}
-function showApp(){
-  gate.hidden = true;
-  app.hidden = false;
-  document.getElementById("q").focus();
-}
+function signedIn(){ try { return sessionStorage.getItem(SESSION_KEY) === "1"; } catch (e) { return false; } }
+function showApp(){ gate.hidden = true; app.hidden = false; document.getElementById("q").focus(); }
+
 document.getElementById("loginForm").addEventListener("submit", e => {
   e.preventDefault();
   const u = document.getElementById("u").value.trim();
@@ -353,168 +314,213 @@ document.getElementById("loginForm").addEventListener("submit", e => {
 });
 document.getElementById("logout").addEventListener("click", () => {
   try { sessionStorage.removeItem(SESSION_KEY); } catch (_) {}
-  app.hidden = true;
-  gate.hidden = false;
+  app.hidden = true; gate.hidden = false;
   document.getElementById("u").value = "";
   document.getElementById("p").value = "";
   document.getElementById("u").focus();
 });
 
-/* ---------- reply data ---------- */
+/* ---------- replies: t = title, b = English, bu = Roman Urdu, w = use when ---------- */
 const GROUPS = [
   { key:"reg", label:"Registration", color:"var(--reg)", items:[
     { t:"Registration Date Incorrect",
       b:"The registration date provided is incorrect. Please check your vehicle registration book and enter the registration date exactly as mentioned there. If the date is not clear, you may contact the Excise Department helpline to confirm the exact registration date recorded in their database. Thank you.",
+      bu:"Aap ne jo registration date di hai wo ghalat hai. Baraye meharbani apni vehicle registration book check karein aur registration date bilkul waisi hi likhein jaisi us mein darj hai. Agar date wazeh na ho to Excise Department ki helpline se exact date maloom kar sakte hain. Shukriya.",
       w:"Customer entered a registration date that does not match the Excise record." },
     { t:"Incorrect Information",
       b:"The information provided is incorrect. Kindly follow the instructions carefully and ensure that the vehicle number, registration date and province code match exactly with your vehicle registration book. Thank you.",
-      w:"General mismatch — more than one field is wrong." },
+      bu:"Aap ne jo maloomat di hain wo ghalat hain. Baraye meharbani hidayat ghaur se parhein aur yaqeeni banayein ke gari ka number, registration date aur province code aapki registration book se bilkul match karte hon. Shukriya.",
+      w:"General mismatch - more than one field is wrong." },
     { t:"Vehicle Number Format",
-      b:"Please enter the vehicle number in the following format: DGN-12-2074 — with the model number in the centre, exactly as mentioned in your vehicle registration book. Thank you.",
+      b:"Please enter the vehicle number in the following format: DGN-12-2074 - with the model number in the centre, exactly as mentioned in your vehicle registration book. Thank you.",
+      bu:"Baraye meharbani gari ka number is format mein likhein: DGN-12-2074 - darmiyan mein model number ke saath, bilkul waise hi jaise registration book mein darj hai. Shukriya.",
       w:"Customer sent the plate without the model number or in the wrong format. Swap in the real plate." },
     { t:"Re-register With Model Number",
       b:"Please re-register the vehicle using the number LEZ-13-9639, including the model number in the centre as mentioned in your vehicle registration book. Thank you.",
-      w:"You already know the correct plate string — swap in the real number before sending." },
+      bu:"Baraye meharbani gari ko dobara register karein number LEZ-13-9639 ke saath, darmiyan mein model number shamil karein jaisa registration book mein likha hai. Shukriya.",
+      w:"You already know the correct plate string - swap in the real number before sending." },
     { t:"Vehicle Not Registered in Your Name",
       b:"The vehicle you are trying to register is not in your name as per the Excise record. Please register a vehicle that is registered against your own CNIC. Thank you.",
-      w:"EDR shows the plate belongs to someone else. Use this when there is only one vehicle in question." },
-    { t:"Vehicle Not in Your Name — Two Vehicles",
+      bu:"Jo gari aap register karne ki koshish kar rahe hain wo Excise record ke mutabiq aapke naam par nahi hai. Baraye meharbani wo gari register karein jo aapke apne CNIC par registered ho. Shukriya.",
+      w:"EDR shows the plate belongs to someone else. Use when there is only one vehicle in question." },
+    { t:"Vehicle Not in Your Name - Two Vehicles",
       b:"Vehicle RIB-15626 is not registered in your name, and vehicle ACT-6788 does not exist in the Excise record. Please verify both vehicle numbers from your vehicle registration book and provide the correct details. Thank you.",
-      w:"Customer tried two plates — one belongs to someone else, the other is not in EDR at all. Swap in the real plate numbers." },
+      bu:"Gari RIB-15626 aapke naam par registered nahi hai, aur gari ACT-6788 Excise record mein mojood hi nahi. Baraye meharbani dono numbers apni registration book se check karein aur durust maloomat bhejein. Shukriya.",
+      w:"Customer tried two plates - one belongs to someone else, the other is not in EDR at all." },
     { t:"Register With Correct Vehicle and SIM",
       b:"Please register using your own vehicle AAX-658, and ensure the SIM you use is registered on the same CNIC. Thank you.",
-      w:"You know the customer’s correct plate and the SIM was the second problem. Swap in the real plate." },
+      bu:"Baraye meharbani apni hi gari AAX-658 se register karein, aur yaqeeni banayein ke jo SIM istemal kar rahe hain wo isi CNIC par registered ho. Shukriya.",
+      w:"You know the customer's correct plate and the SIM was the second problem." },
     { t:"Already Registered",
       b:"Only one vehicle can be registered against one CNIC, and a vehicle is already registered against this CNIC. Registration with a different mobile number is also not permitted. Thank you.",
+      bu:"Ek CNIC par sirf ek hi gari register ho sakti hai, aur is CNIC par pehle se ek gari registered hai. Kisi doosre mobile number se registration bhi mumkin nahi. Shukriya.",
       w:"Nature: Already Registered. Customer is trying a second vehicle or a second number." },
     { t:"CNIC and Mobile Number Must Match",
       b:"Only one vehicle can be registered against one CNIC, even with a different mobile number. The token will only be issued when the mobile number and CNIC belong to the same owner. Thank you.",
-      w:"Customer registered from a number held on someone else’s CNIC." },
+      bu:"Ek CNIC par sirf ek gari register ho sakti hai, chahe doosra mobile number hi kyun na ho. Token tabhi jari hoga jab mobile number aur CNIC ek hi malik ke hon. Shukriya.",
+      w:"Customer registered from a number held on someone else's CNIC." },
     { t:"Mobile Number Not on CNIC (NADRA)",
       b:"As per NADRA record, this mobile number is not registered against your CNIC. The mobile number must be registered on the same CNIC as the vehicle owner. Please use a number that is in your own name and register again. Thank you.",
-      w:"NADRA lookup fails — SIM ownership does not match the CNIC." },
+      bu:"NADRA record ke mutabiq ye mobile number aapke CNIC par registered nahi hai. Mobile number usi CNIC par hona chahiye jo gari ke malik ka hai. Baraye meharbani apne naam ka number istemal kar ke dobara register karein. Shukriya.",
+      w:"NADRA lookup fails - SIM ownership does not match the CNIC." },
     { t:"Province Mismatch",
       b:"The province code entered does not match the province in which your vehicle is registered. Please enter the province code exactly as mentioned in your vehicle registration book. Thank you.",
+      bu:"Aap ne jo province code likha hai wo us province se match nahi karta jahan aapki gari registered hai. Baraye meharbani province code bilkul waise likhein jaise registration book mein darj hai. Shukriya.",
       w:"Nature: Province Mismatch. Correct code is visible in the Excise record." },
-    { t:"Province Code — Vehicle’s Province, Not Yours",
+    { t:"Province Code - Vehicle's Province, Not Yours",
       b:"The province code must be that of the vehicle, not your own province of residence. Please check your vehicle registration book and enter the province code exactly as written there. Thank you.",
-      w:"Customer entered the province they live in instead of the vehicle’s registering province." },
+      bu:"Province code gari ka hona chahiye, aapki rehaish ka nahi. Baraye meharbani apni registration book dekh kar province code bilkul waise likhein jaise us mein darj hai. Shukriya.",
+      w:"Customer entered the province they live in instead of the vehicle's registering province." },
     { t:"CNIC Not Linked",
       b:"Your CNIC is not linked with the vehicle in our record. The token is issued only when the mobile number and CNIC belong to the same owner. Kindly verify and register again. Thank you.",
+      bu:"Hamare record mein aapka CNIC is gari se link nahi hai. Token tabhi jari hota hai jab mobile number aur CNIC ek hi malik ke hon. Baraye meharbani tasdeeq kar ke dobara register karein. Shukriya.",
       w:"Nature: CNIC Not Linked." },
     { t:"SIM Not on Name",
       b:"The mobile number used is not registered on your own CNIC. Please register using a SIM issued on the same CNIC as the vehicle owner. Thank you.",
+      bu:"Jo mobile number istemal kiya gaya hai wo aapke apne CNIC par registered nahi hai. Baraye meharbani wo SIM istemal karein jo gari ke malik ke CNIC par jari hui ho. Shukriya.",
       w:"Nature: SIM not on name." },
     { t:"Not Eligible",
       b:"As per record, your vehicle does not meet the eligibility criteria for this scheme. Thank you.",
+      bu:"Record ke mutabiq aapki gari is scheme ke mayar par poori nahi utarti. Shukriya.",
       w:"Nature: Not Eligible. Vehicle category or engine capacity is outside the scheme." },
     { t:"Registration Incomplete",
       b:"Your registration could not be completed. Please re-check the vehicle number and registration date from your vehicle registration book and submit again exactly as mentioned there. Thank you.",
+      bu:"Aapki registration mukammal nahi ho saki. Baraye meharbani gari ka number aur registration date apni registration book se dobara check kar ke bilkul waise hi bhejein. Shukriya.",
       w:"Nature: Registration Incomplete." },
     { t:"No Record Found Against CNIC",
       b:"No information has been received against this CNIC. As per our record, no registration exists against this CNIC. Please register first by sending your details from the mobile number registered on the same CNIC. Thank you.",
+      bu:"Is CNIC ke khilaf koi maloomat mosul nahi hui. Hamare record mein is CNIC par koi registration mojood nahi. Baraye meharbani pehle usi CNIC par registered mobile number se apni tafseelat bhej kar registration karwayein. Shukriya.",
       w:"Nothing comes up in EDR for the CNIC the customer gave." },
     { t:"No Reply Received",
       b:"No response has been received against this CNIC. Please re-send your registration details from the mobile number registered on the same CNIC, and ensure the format is exactly as advised. Thank you.",
+      bu:"Is CNIC ke khilaf koi jawab mosul nahi hua. Baraye meharbani usi CNIC par registered mobile number se apni registration tafseelat dobara bhejein, aur format bilkul bataye gaye tareeqe se rakhein. Shukriya.",
       w:"Customer says they sent the SMS but got nothing back." },
-    { t:"Re-registration Required — System Updated",
+    { t:"Re-registration Required - System Updated",
       b:"The system has been updated. Kindly re-register using the details provided, exactly as mentioned in your vehicle registration book. Thank you.",
+      bu:"System update ho chuka hai. Baraye meharbani di gayi tafseelat ke mutabiq dobara register karein, bilkul waise jaise registration book mein darj hai. Shukriya.",
       w:"A fix has gone in and the customer can now try again." },
     { t:"Registration SMS Not Received",
       b:"Your registration request has been received, but the confirmation SMS could not be delivered to your mobile number. Please ensure your SIM is active and has network coverage, then send your details again from the same number. Thank you.",
+      bu:"Aapki registration request mosul ho gayi hai, lekin confirmation SMS aapke number tak nahi pohanch saka. Baraye meharbani yaqeeni banayein ke SIM active hai aur network mojood hai, phir usi number se apni tafseelat dobara bhejein. Shukriya.",
       w:"Nature: SMS Not Received. Request reached the system but the reply never landed." },
     { t:"Second Vehicle Not Allowed",
       b:"A vehicle is already registered against your CNIC. Under this scheme only one vehicle can be registered per CNIC, so a second vehicle cannot be registered. Thank you.",
+      bu:"Aapke CNIC par pehle se ek gari registered hai. Is scheme mein ek CNIC par sirf ek hi gari register ho sakti hai, is liye doosri gari register nahi ho sakti. Shukriya.",
       w:"Nature: Second Vehicle. Customer is knowingly adding another vehicle." },
     { t:"Too Many Attempts",
       b:"Several registration attempts have been made from this number, due to which it has been temporarily blocked. Please wait for some time and then try again using the correct details from your vehicle registration book. Thank you.",
+      bu:"Is number se kai baar registration ki koshish ki gayi hai, jis ki wajah se ye waqti tor par band kar diya gaya hai. Baraye meharbani kuch der intezaar karein phir registration book se durust tafseelat ke saath dobara koshish karein. Shukriya.",
       w:"Nature: Too Many Attempts. Number is rate-limited after repeated failures." },
-    { t:"Too Many Attempts — Different Vehicles",
+    { t:"Too Many Attempts - Different Vehicles",
       b:"Several attempts have been made with different vehicle details from this number. Kindly submit only your own vehicle information, matching exactly with your vehicle registration book. Thank you.",
+      bu:"Is number se mukhtalif gariyon ki tafseelat ke saath kai koshishein ki gayi hain. Baraye meharbani sirf apni hi gari ki maloomat bhejein, jo registration book se bilkul match karti ho. Shukriya.",
       w:"Customer is trying multiple plates that are not theirs, rather than repeating one failing attempt." },
     { t:"Vehicle Data Not Found",
       b:"This vehicle number does not exist in the Excise record. Please verify the vehicle number from your registration book and confirm that the vehicle is registered with the Excise Department. Thank you.",
+      bu:"Ye gari ka number Excise record mein mojood nahi hai. Baraye meharbani registration book se number check karein aur tasdeeq karein ke gari Excise Department mein registered hai. Shukriya.",
       w:"Nature: Vehicle data not found. Nothing comes up in EDR against the plate." },
     { t:"Wrong CNIC Entered",
       b:"The CNIC entered does not match our record. Please send your 13-digit CNIC number without dashes, exactly as printed on your identity card. Thank you.",
+      bu:"Aap ne jo CNIC likha hai wo hamare record se match nahi karta. Baraye meharbani apna 13 hindson wala CNIC number bina dash ke bhejein, bilkul waise jaise shanakhti card par likha hai. Shukriya.",
       w:"Customer typed the CNIC with dashes, spaces, or digits missing." },
     { t:"Vehicle Ownership Transferred",
-      b:"As per the Excise record, this vehicle is registered in another person’s name. If you have purchased the vehicle, please complete the ownership transfer with the Excise Department first, then register again. Thank you.",
-      w:"EDR still shows the previous owner — transfer has not been recorded." }
+      b:"As per the Excise record, this vehicle is registered in another person's name. If you have purchased the vehicle, please complete the ownership transfer with the Excise Department first, then register again. Thank you.",
+      bu:"Excise record ke mutabiq ye gari kisi aur ke naam par registered hai. Agar aap ne ye gari kharidi hai to pehle Excise Department se ownership transfer mukammal karwayein, phir dobara register karein. Shukriya.",
+      w:"EDR still shows the previous owner - transfer has not been recorded." }
   ]},
 
   { key:"gen", label:"Token Generation", color:"var(--gen)", items:[
     { t:"Token Already Generated",
       b:"The token has already been generated, so there is no need to register again. Please send TOK from the same mobile number used for registration to receive your token. Thank you.",
+      bu:"Aapka token pehle hi jari ho chuka hai, is liye dobara register karne ki zaroorat nahi. Baraye meharbani usi mobile number se TOK likh kar bhejein jo registration ke waqt istemal kiya tha. Shukriya.",
       w:"Customer keeps re-registering when the token already exists." },
-    { t:"Already Registered — Token Issued",
-      b:"Your vehicle is already registered and your token has already been generated. Please visit an authorised fuel station with your token to obtain your fuel. Thank you.",
-      w:"Both registration and token are confirmed — customer only needs to go and redeem." },
+    { t:"Already Registered - Token Issued",
+      b:"Your vehicle is already registered and your token has already been generated. Please visit an authorised fuel station with your token to obtain your fuel. Please note that only one vehicle can be registered against one CNIC, and the SMS must be sent from the same SIM used at the time of registration. Thank you.",
+      bu:"Aapki gari pehle se registered hai aur token bhi jari ho chuka hai. Baraye meharbani apna token le kar kisi manzoor shuda petrol pump par jayein. Yaad rahe ke ek CNIC par sirf ek gari register ho sakti hai, aur SMS usi SIM se bhejna hoga jo registration ke waqt istemal ki thi. Shukriya.",
+      w:"Both registration and token are confirmed - customer only needs to go and redeem." },
     { t:"TOK Not Sent to 9771",
       b:"Your token has already been generated. Please send TOK from the same mobile number used at the time of registration to receive it. Thank you.",
-      w:"Nature: TOK Not Sent to 9771. Check the remark first — many of these are really pump verification failures." },
+      bu:"Aapka token pehle hi jari ho chuka hai. Baraye meharbani usi mobile number se TOK bhejein jo registration ke waqt istemal kiya tha. Shukriya.",
+      w:"Nature: TOK Not Sent to 9771. Check the remark first - many are really pump verification failures." },
     { t:"Token SMS Not Received",
       b:"Your token has been generated, but the SMS could not be delivered to your mobile number. Please ensure your SIM is active and has network coverage, then send TOK again from the same registered number. Thank you.",
+      bu:"Aapka token jari ho chuka hai, lekin SMS aapke number tak nahi pohanch saka. Baraye meharbani yaqeeni banayein ke SIM active hai aur network mojood hai, phir usi registered number se dobara TOK bhejein. Shukriya.",
       w:"Nature: Token SMS Not Received. Token exists in the system but the SMS never arrived." },
     { t:"Token SMS Deleted",
-      b:"Your token has already been generated. If the message has been deleted, please send TOK from the same registered mobile number to receive your token details again. Thank you.",
-      w:"Nature: Token SMS Deleted. Customer deleted the message and needs it resent." },
+      b:"Your token has already been generated, so there is no need to register again. If the message has been deleted, simply send TOK from your registered mobile number to receive your token details again. Thank you.",
+      bu:"Aapka token pehle hi jari ho chuka hai, dobara register karne ki zaroorat nahi. Agar message delete ho gaya hai to sirf apne registered mobile number se TOK likh kar bhejein, token dobara mil jayega. Shukriya.",
+      w:"Customer deleted the token message and is about to re-register unnecessarily." },
     { t:"Token Not Yet Generated",
       b:"Your token has not been generated yet. Tokens are issued as per the scheme schedule against your registered vehicle. Please send TOK again from your registered mobile number after some time. Thank you.",
+      bu:"Aapka token abhi jari nahi hua. Token scheme ke shedule ke mutabiq aapki registered gari par jari hote hain. Baraye meharbani kuch der baad apne registered number se dobara TOK bhejein. Shukriya.",
       w:"Registration is complete but no token exists against the CNIC yet." }
   ]},
 
   { key:"red", label:"Token Redemption", color:"var(--red)", items:[
     { t:"Pump Cannot Verify",
       b:"Your token is valid in the system; however, the pump application is unable to verify it at the dealer end. The matter has been forwarded to the concerned team for resolution. Kindly try again after some time. Thank you.",
-      w:"Nature: Pump Cant Verify — the largest bucket in the open queue." },
+      bu:"Aapka token system mein durust hai, lekin pump ki application dealer ke end par ise verify nahi kar pa rahi. Mamla hal ke liye mutalliqa team ko bhej diya gaya hai. Baraye meharbani kuch der baad dobara koshish karein. Shukriya.",
+      w:"Nature: Pump Cant Verify - the largest bucket in the open queue." },
     { t:"Token Expired Early",
       b:"Your token is still active in the system. The verification issue is at the pump end and has been referred to the concerned team. Please try at another authorised fuel station in the meantime. Thank you.",
-      w:"Nature: Token Expired Early, but the token is still live — it is a pump fault, not an expiry." },
+      bu:"Aapka token system mein abhi bhi active hai. Verification ka masla pump ki taraf se hai aur mutalliqa team ko bhej diya gaya hai. Is darmiyan kisi doosre manzoor shuda petrol pump par koshish karein. Shukriya.",
+      w:"Nature: Token Expired Early, but the token is still live - it is a pump fault, not an expiry." },
     { t:"Token Already Used",
       b:"As per our record, this token has already been redeemed. If you have not used it yourself, kindly visit the fuel station where it was redeemed, or contact the helpline with your token number. Thank you.",
+      bu:"Hamare record ke mutabiq ye token pehle hi istemal ho chuka hai. Agar aap ne khud istemal nahi kiya to us petrol pump par jayein jahan ye redeem hua, ya apna token number le kar helpline par rabta karein. Shukriya.",
       w:"Nature: Token Used. Redemption is confirmed in the record." },
     { t:"Pump Declined",
       b:"The fuel station has declined to process your token. Please visit another authorised fuel station under the scheme. Kindly share the station name and location so the matter can be taken up with the concerned OMC. Thank you.",
+      bu:"Petrol pump ne aapka token process karne se inkar kiya hai. Baraye meharbani scheme ke kisi doosre manzoor shuda pump par jayein. Pump ka naam aur location bata dein taake mamla mutalliqa OMC ke saath uthaya ja sake. Shukriya.",
       w:"Nature: Pump Declined. Dealer refused to serve despite a valid token." },
     { t:"Pump Not Found",
       b:"The fuel station you visited is not listed in the system. Please visit an authorised fuel station registered under the scheme to redeem your token. Thank you.",
+      bu:"Jis petrol pump par aap gaye wo system mein darj nahi hai. Baraye meharbani token redeem karne ke liye scheme mein registered manzoor shuda pump par jayein. Shukriya.",
       w:"Nature: Pump not found. Station is not on-boarded in the pump application." },
     { t:"Token Expired",
       b:"Your token has expired and can no longer be redeemed. A new token will be issued as per the scheme schedule. Please send TOK from your registered mobile number once it is due. Thank you.",
-      w:"Token genuinely lapsed — confirm the expiry in the record before sending this." },
+      bu:"Aapka token khatam ho chuka hai aur ab istemal nahi ho sakta. Naya token scheme ke shedule ke mutabiq jari hoga. Waqt aane par apne registered number se TOK bhej dein. Shukriya.",
+      w:"Token genuinely lapsed - confirm the expiry in the record before sending this." },
     { t:"Fuel Station Location Required",
       b:"Kindly share the name and location of the fuel station where the issue occurred, so the matter can be taken up with the concerned OMC. Thank you.",
-      w:"Pump complaint arrived with no station details — needed before it can be escalated." },
+      bu:"Baraye meharbani us petrol pump ka naam aur location bata dein jahan masla pesh aaya, taake mamla mutalliqa OMC ke saath uthaya ja sake. Shukriya.",
+      w:"Pump complaint arrived with no station details - needed before it can be escalated." },
     { t:"Location Not Provided",
       b:"Your complaint could not be processed as the fuel station name and location were not provided. Kindly share these details so the matter can be taken forward. Thank you.",
+      bu:"Aapki shikayat process nahi ho saki kyunke petrol pump ka naam aur location faraham nahi ki gayi. Baraye meharbani ye tafseelat bata dein taake mamla aage barhaya ja sake. Shukriya.",
       w:"Closing or holding reply when the customer never supplied the station details." }
   ]},
 
   { key:"gnl", label:"Status & Closing", color:"var(--gnl)", items:[
-    { t:"Complaint Registered — Under Process",
+    { t:"Complaint Registered - Under Process",
       b:"Your complaint has been registered and is under process with the concerned team. You will be informed as soon as it is resolved. Thank you.",
+      bu:"Aapki shikayat darj kar li gayi hai aur mutalliqa team ke paas zer-e-amal hai. Hal hote hi aapko ittela de di jayegi. Shukriya.",
       w:"First reply on a ticket that genuinely needs escalation." },
     { t:"Issue Resolved",
       b:"The issue reported in your complaint has been resolved. Please try again, and contact us if the problem persists. Thank you.",
+      bu:"Aapki shikayat mein bataya gaya masla hal kar diya gaya hai. Baraye meharbani dobara koshish karein, aur masla barqarar rahe to rabta karein. Shukriya.",
       w:"Closing reply once the fix is confirmed in the system." },
     { t:"Forwarded to Concerned Team",
       b:"Your complaint has been forwarded to the concerned team for resolution. Kindly try again after some time. Thank you.",
+      bu:"Aapki shikayat hal ke liye mutalliqa team ko bhej di gayi hai. Baraye meharbani kuch der baad dobara koshish karein. Shukriya.",
       w:"Ticket has been re-routed and the customer needs an interim reply." },
-    { t:"Information Confirmed — No Action Required",
+    { t:"Information Confirmed - No Action Required",
       b:"Your details have been verified and no issue has been found in our record. Please try again from your registered mobile number. Thank you.",
+      bu:"Aapki tafseelat ki tasdeeq kar li gayi hai aur hamare record mein koi masla nahi mila. Baraye meharbani apne registered mobile number se dobara koshish karein. Shukriya.",
       w:"EDR check comes back clean and the complaint needs no further action." }
   ]}
 ];
 
-/* ---------- render ---------- */
+/* ---------- render replies ---------- */
 const list = document.getElementById("list");
 const qEl = document.getElementById("q");
 const countEl = document.getElementById("count");
 const emptyEl = document.getElementById("empty");
 const COPY_ICON = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 3.5h-7a1 1 0 0 0-1 1v7" stroke-linecap="round"/></svg>';
 
+const cardIndex = [];
 let total = 0;
+
 for (const g of GROUPS) {
   const sec = document.createElement("section");
   sec.className = "group";
@@ -537,7 +543,7 @@ for (const g of GROUPS) {
     const card = document.createElement("article");
     card.className = "card";
     card.dataset.cat = g.key;
-    card.dataset.hay = (it.t + " " + it.b + " " + it.w).toLowerCase();
+    card.dataset.hay = (it.t + " " + it.b + " " + it.bu + " " + it.w).toLowerCase();
 
     const top = document.createElement("div");
     top.className = "card-top";
@@ -547,16 +553,14 @@ for (const g of GROUPS) {
     btn.type = "button";
     btn.className = "copy";
     btn.innerHTML = COPY_ICON + "<span>Copy</span>";
-    btn.addEventListener("click", () => copyReply(btn, it.b));
+    btn.addEventListener("click", () => copyReply(btn, it));
     top.append(h3, btn);
 
     const body = document.createElement("p");
     body.className = "body";
-    body.textContent = it.b;
 
     const sig = document.createElement("p");
     sig.className = "sig";
-    sig.textContent = signatureLine();
 
     const when = document.createElement("p");
     when.className = "when";
@@ -566,13 +570,22 @@ for (const g of GROUPS) {
 
     card.append(top, body, sig, when);
     cards.append(card);
+    cardIndex.push({ item: it, body, sig });
   }
 
   sec.append(head, cards);
   list.append(sec);
 }
 
-async function copyReply(btn, text){
+function paintText(){
+  for (const { item, body, sig } of cardIndex) {
+    body.textContent = lang === "ur" ? item.bu : item.b;
+    sig.textContent = signatureLine();
+  }
+}
+
+async function copyReply(btn, item){
+  const text = lang === "ur" ? item.bu : item.b;
   const sig = signatureLine();
   const payload = sig ? text + "\n\n" + sig : text;
   const label = btn.querySelector("span");
@@ -600,6 +613,7 @@ function flash(btn, label, msg){
   setTimeout(() => { label.textContent = prev; btn.classList.remove("done"); }, 1400);
 }
 
+/* ---------- search + filter ---------- */
 let activeCat = "all";
 document.querySelectorAll(".chip").forEach(chip => {
   chip.addEventListener("click", () => {
@@ -628,35 +642,38 @@ function apply(){
   emptyEl.hidden = shown !== 0;
 }
 
+/* ---------- language ---------- */
+document.querySelectorAll(".lang-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    lang = btn.dataset.lang;
+    lsSet(LANG_KEY, lang);
+    document.querySelectorAll(".lang-btn").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+    paintText();
+  });
+});
+document.querySelectorAll(".lang-btn").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+
 /* ---------- signature name ---------- */
 const agentEl = document.getElementById("agent");
 const savedEl = document.getElementById("sigSaved");
 let savedTimer;
-
 agentEl.value = agentName;
 sizeAgentInput();
-
 agentEl.addEventListener("input", () => {
   agentName = agentEl.value.trim();
-  saveAgent(agentName);
+  lsSet(AGENT_KEY, agentName);
   sizeAgentInput();
-  for (const el of document.querySelectorAll(".sig")) {
-    el.textContent = signatureLine();
-  }
+  for (const { sig } of cardIndex) sig.textContent = signatureLine();
   savedEl.textContent = "Saved";
   clearTimeout(savedTimer);
   savedTimer = setTimeout(() => { savedEl.textContent = ""; }, 1600);
 });
-
 function sizeAgentInput(){
   const n = Math.max(8, Math.min(30, agentEl.value.length || 9));
   agentEl.style.width = n + "ch";
 }
 
 /* ---------- shift schedule ---------- */
-const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-/* Contact numbers are deliberately not published here — this page is on a
-   public URL and the numbers belong to the team, not to this site. */
 const ROSTER = [
   { n:"Asif",         t:"Team Lead",       d:["Morning","Morning","Morning","Morning","Morning","OFF","OFF"],     o:"Sat, Sun" },
   { n:"Sohail",       t:"Night preferred", d:["Night","Night","Night","Night","Night","OFF","OFF"],               o:"Sat, Sun" },
@@ -672,13 +689,10 @@ const SHIFT_VAR = { Morning:"m", Evening:"e", Night:"n", OFF:"o" };
 const schedBody = document.getElementById("schedBody");
 for (const r of ROSTER) {
   const tr = document.createElement("tr");
-
   const who = document.createElement("td");
-  const nm = document.createElement("div"); nm.className = "sn"; nm.textContent = r.n;
-  who.append(nm);
+  const nm = document.createElement("div"); nm.className = "sn"; nm.textContent = r.n; who.append(nm);
   if (r.t) { const t = document.createElement("div"); t.className = "st"; t.textContent = r.t; who.append(t); }
   tr.append(who);
-
   for (const s of r.d) {
     const td = document.createElement("td");
     td.className = "shift";
@@ -688,12 +702,10 @@ for (const r of ROSTER) {
     td.textContent = s;
     tr.append(td);
   }
-
   const off = document.createElement("td");
   off.className = "off-col";
   off.textContent = r.o;
   tr.append(off);
-
   schedBody.append(tr);
 }
 
@@ -726,6 +738,7 @@ document.querySelectorAll(".view-btn").forEach(btn => {
   });
 });
 
+paintText();
 apply();
 if (signedIn()) showApp();
 </script>
