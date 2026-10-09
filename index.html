@@ -215,6 +215,39 @@ table.blsheet td.bl-pad{background:#d9ead3}
 .bl-warn li{font-size:12.5px;color:var(--muted)}
 .bl-warn code{font-family:var(--f-mono);color:var(--fg);background:var(--surface-2);padding:1px 6px;border-radius:4px}
 .bl-cat.conflict{border-color:var(--danger)}
+
+/* ---------- work log ---------- */
+.wl-entry{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin:26px 0 16px;padding:14px 15px;background:var(--surface);border:1px solid var(--border);border-radius:10px}
+.wl-f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.wl-f > span{font-size:12px;color:var(--muted)}
+.wl-f > span i{font-style:normal;color:var(--faint);font-size:11px}
+.wl-f input,.wl-f select{font:inherit;font-size:14px;color:var(--fg);background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:8px 10px}
+.wl-f input:focus-visible,.wl-f select:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+.wl-ticket input{font-family:var(--f-mono);width:11ch}
+.wl-nature{flex:1 1 220px}
+.wl-nature select{width:100%}
+.wl-msg{font-size:12.5px;min-height:1.2em;align-self:center}
+.wl-msg.ok{color:var(--accent)}
+.wl-msg.warn{color:var(--danger)}
+
+.wl-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.wl-counts{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);margin-right:auto}
+.wl-counts b{color:var(--fg);font-weight:600}
+
+.wl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
+table.wl-table{border-collapse:collapse;width:100%;min-width:680px;font-size:13px}
+table.wl-table th,table.wl-table td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+table.wl-table thead th{background:var(--surface-2);font-weight:600;color:var(--fg);font-size:12.5px;position:sticky;top:0}
+table.wl-table tbody tr:last-child td{border-bottom:none}
+table.wl-table tbody tr:hover td{background:var(--surface)}
+td.wl-n,th.wl-n{width:3.5rem;color:var(--faint);font-variant-numeric:tabular-nums}
+td.wl-tk{font-family:var(--f-mono);font-weight:600;color:var(--accent)}
+td.wl-time{color:var(--faint);font-size:12px;white-space:nowrap}
+td.wl-nat{color:var(--muted)}
+.wl-del{font:inherit;font-size:15px;line-height:1;cursor:pointer;background:transparent;color:var(--faint);border:none;padding:2px 6px;border-radius:5px}
+.wl-del:hover{color:var(--danger);background:var(--surface-2)}
+.wl-del:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.wl-blank{padding:38px 20px;text-align:center;color:var(--muted);font-size:13.5px}
 table.blsheet td.bl-dupe{background:#f6c9c0;font-weight:700;box-shadow:inset 0 0 0 2px #a8341f}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -259,6 +292,7 @@ table.blsheet td.bl-dupe{background:#f6c9c0;font-weight:700;box-shadow:inset 0 0
       <button class="view-btn" type="button" data-view="replies" aria-pressed="true">Replies</button>
       <button class="view-btn" type="button" data-view="schedule" aria-pressed="false">Shift schedule</button>
       <button class="view-btn" type="button" data-view="backlog" aria-pressed="false">Backlog sheet</button>
+      <button class="view-btn" type="button" data-view="worklog" aria-pressed="false">Work log</button>
     </nav>
     <p class="sub">Standard customer responses for complaints registered on the BPO CMS. Search, then copy the reply straight into the ticket.</p>
     <div class="ctl">
@@ -331,7 +365,46 @@ table.blsheet td.bl-dupe{background:#f6c9c0;font-weight:700;box-shadow:inset 0 0
 
     <h3 class="bl-h">Preview</h3>
     <div class="bl-preview-wrap"><div id="blPreview"></div></div>
-    <p class="sched-note">Paste ticket numbers in any form — commas, spaces or new lines. Duplicates inside a category are dropped automatically. The download opens in Excel with the colours intact.</p>
+    <p class="sched-note" id="blNote">Paste ticket numbers in any form — commas, spaces or new lines. Duplicates inside a category are dropped automatically. The download opens in Excel with the colours intact.</p>
+  </div>
+
+  <div id="view-worklog" hidden>
+    <div class="wl-entry">
+      <label class="wl-f wl-ticket">
+        <span>Ticket no</span>
+        <input id="wlTicket" type="text" inputmode="numeric" autocomplete="off" placeholder="183579">
+      </label>
+      <label class="wl-f">
+        <span>Category</span>
+        <select id="wlCat">
+          <option>Registration</option>
+          <option>Token Generation</option>
+          <option>Token Redemption</option>
+        </select>
+      </label>
+      <label class="wl-f wl-nature">
+        <span>Nature <i>optional</i></span>
+        <select id="wlNature"></select>
+      </label>
+      <button type="button" class="bl-btn primary" id="wlAdd">Add</button>
+      <span class="wl-msg" id="wlMsg" aria-live="polite"></span>
+    </div>
+
+    <div class="wl-bar">
+      <span class="wl-counts" id="wlCounts"></span>
+      <button type="button" class="bl-btn" id="wlExport">Download for Excel</button>
+      <button type="button" class="bl-btn" id="wlClear">Clear log</button>
+    </div>
+
+    <div class="wl-wrap">
+      <table class="wl-table">
+        <thead>
+          <tr><th class="wl-n">#</th><th>Ticket</th><th>Category</th><th>Nature</th><th>Logged</th><th></th></tr>
+        </thead>
+        <tbody id="wlBody"></tbody>
+      </table>
+    </div>
+    <p class="sched-note">Log each ticket as you resolve it in the CMS. Entries stay in this browser and can be exported at any time.</p>
   </div>
 </div>
 
@@ -1124,11 +1197,201 @@ blName.addEventListener("input", () => { blRender(); blSave(); });
   blRender();
 })();
 
+/* ---------- work log ---------- */
+const WL_KEY = "frr.worklog";
+const WL_NATURES = {
+  "Registration": ["Registration Incomplete","Province Mismatch","Already Registered","Wrong Plate Number",
+                   "Wrong Registration Date","CNIC Not Linked","Second Vehicle","Not Eligible","SIM not on name",
+                   "SMS Not Received","No Reply SMS","Too Many Attempts","Vehicle data not found"],
+  "Token Generation": ["TOK Not Sent to 9771","Token SMS Not Received","Token SMS Deleted"],
+  "Token Redemption": ["Pump Cant Verify","Token Expired Early","Token Used","Pump Declined","Pump not found",
+                       "TOK Not Sent to 9771","Token SMS Not Received","Token SMS Deleted"]
+};
+
+const wlTicket = document.getElementById("wlTicket");
+const wlCat = document.getElementById("wlCat");
+const wlNature = document.getElementById("wlNature");
+const wlBody = document.getElementById("wlBody");
+const wlCounts = document.getElementById("wlCounts");
+const wlMsg = document.getElementById("wlMsg");
+
+let wlRows = [];
+try {
+  const raw = localStorage.getItem(WL_KEY);
+  if (raw) {
+    const d = JSON.parse(raw);
+    if (Array.isArray(d)) wlRows = d;
+  }
+} catch (e) {}
+
+function wlSave(){ try { localStorage.setItem(WL_KEY, JSON.stringify(wlRows)); } catch (e) {} }
+
+function wlFillNatures(){
+  const list = WL_NATURES[wlCat.value] || [];
+  wlNature.textContent = "";
+  const blank = document.createElement("option");
+  blank.value = "";
+  blank.textContent = "—";
+  wlNature.append(blank);
+  for (const n of list) {
+    const o = document.createElement("option");
+    o.value = o.textContent = n;
+    wlNature.append(o);
+  }
+}
+wlCat.addEventListener("change", () => { wlFillNatures(); wlSaveSticky(); });
+function wlSaveSticky(){ try { localStorage.setItem(WL_KEY + ".cat", wlCat.value); } catch (e) {} }
+try {
+  const c = localStorage.getItem(WL_KEY + ".cat");
+  if (c && WL_NATURES[c]) wlCat.value = c;
+} catch (e) {}
+wlFillNatures();
+
+function wlFlash(text, kind){
+  wlMsg.textContent = text;
+  wlMsg.className = "wl-msg " + kind;
+  clearTimeout(wlFlash._t);
+  wlFlash._t = setTimeout(() => { wlMsg.textContent = ""; wlMsg.className = "wl-msg"; }, 2600);
+}
+
+function wlAdd(){
+  const t = (wlTicket.value.match(/\d+/g) || []).join("");
+  if (!t) { wlFlash("Enter a ticket number first.", "warn"); wlTicket.focus(); return; }
+  const dup = wlRows.find(r => r.t === t);
+  if (dup) { wlFlash("Ticket " + t + " is already logged under " + dup.c + ".", "warn"); wlTicket.select(); return; }
+  wlRows.unshift({ t, c: wlCat.value, n: wlNature.value || "", at: new Date().toISOString() });
+  wlSave();
+  wlRender();
+  wlFlash("Ticket " + t + " logged.", "ok");
+  wlTicket.value = "";
+  wlTicket.focus();
+}
+
+document.getElementById("wlAdd").addEventListener("click", wlAdd);
+wlTicket.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); wlAdd(); } });
+
+document.getElementById("wlClear").addEventListener("click", () => {
+  if (!wlRows.length) return;
+  if (!document.getElementById("wlClear").dataset.armed) {
+    document.getElementById("wlClear").dataset.armed = "1";
+    wlFlash("Click Clear log again to delete all " + wlRows.length + " entries.", "warn");
+    setTimeout(() => { delete document.getElementById("wlClear").dataset.armed; }, 5000);
+    return;
+  }
+  delete document.getElementById("wlClear").dataset.armed;
+  wlRows = [];
+  wlSave();
+  wlRender();
+  wlFlash("Log cleared.", "ok");
+});
+
+function wlFmt(iso){
+  const d = new Date(iso);
+  const M = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mm = String(d.getMinutes()).padStart(2, "0");
+  return d.getDate() + " " + M[d.getMonth()] + ", " + hh + ":" + mm;
+}
+
+function wlRender(){
+  wlBody.textContent = "";
+  if (!wlRows.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 6;
+    td.className = "wl-blank";
+    td.textContent = "No tickets logged yet. Add the first one above.";
+    tr.append(td);
+    wlBody.append(tr);
+  } else {
+    wlRows.forEach((r, i) => {
+      const tr = document.createElement("tr");
+      const cells = [
+        ["wl-n", String(wlRows.length - i)],
+        ["wl-tk", r.t],
+        ["", r.c],
+        ["wl-nat", r.n || "—"],
+        ["wl-time", wlFmt(r.at)]
+      ];
+      for (const [cls, val] of cells) {
+        const td = document.createElement("td");
+        if (cls) td.className = cls;
+        td.textContent = val;
+        tr.append(td);
+      }
+      const tdx = document.createElement("td");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "wl-del";
+      b.textContent = "×";
+      b.title = "Remove this entry";
+      b.setAttribute("aria-label", "Remove ticket " + r.t);
+      b.addEventListener("click", () => {
+        wlRows = wlRows.filter(x => x.t !== r.t);
+        wlSave();
+        wlRender();
+      });
+      tdx.append(b);
+      tr.append(tdx);
+      wlBody.append(tr);
+    });
+  }
+
+  const by = {};
+  for (const r of wlRows) by[r.c] = (by[r.c] || 0) + 1;
+  const parts = Object.entries(by).map(([k, v]) => k + " " + v);
+  wlCounts.innerHTML = "";
+  const b = document.createElement("b");
+  b.textContent = wlRows.length + " logged";
+  wlCounts.append(b);
+  if (parts.length) wlCounts.append(document.createTextNode("  ·  " + parts.join("  ·  ")));
+}
+
+document.getElementById("wlExport").addEventListener("click", () => {
+  if (!wlRows.length) { wlFlash("Nothing to export yet.", "warn"); return; }
+  const esc = s => String(s).replace(/[&<>]/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;" }[ch]));
+  const B = "border:1px solid #000;padding:5px 9px;font-family:Arial,sans-serif;";
+  const who = agentName || "";
+  const today = new Date();
+  const M = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const title = today.getDate() + ", " + M[today.getMonth()] + ", " + today.getFullYear() + (who ? "  (" + who + ")" : "");
+
+  let rows = '<tr><td colspan="4" style="' + B + 'background:#F8CBCB;font-weight:bold;font-size:14pt;text-align:center">'
+    + esc("Resolved tickets — " + title) + "</td></tr>";
+  rows += "<tr>" + ["Ticket No","Category","Nature","Logged"]
+    .map(h => '<td style="' + B + 'background:#D6E4F7;font-weight:bold">' + h + "</td>").join("") + "</tr>";
+  for (const r of [...wlRows].reverse()) {
+    rows += "<tr>"
+      + '<td style="' + B + 'background:#D9EAD3">' + esc(r.t) + "</td>"
+      + '<td style="' + B + '">' + esc(r.c) + "</td>"
+      + '<td style="' + B + '">' + esc(r.n || "") + "</td>"
+      + '<td style="' + B + '">' + esc(wlFmt(r.at)) + "</td></tr>";
+  }
+
+  const html = '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8">'
+    + "<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>"
+    + "<x:Name>Resolved</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>"
+    + "</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->"
+    + "</head><body><table>" + rows + "</table></body></html>";
+
+  const blob = new Blob(["﻿" + html], { type: "application/vnd.ms-excel" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Resolved-tickets-" + today.toISOString().slice(0, 10) + ".xls";
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+});
+
+wlRender();
+
 /* ---------- view switcher ---------- */
 const views = {
   replies: document.getElementById("view-replies"),
   schedule: document.getElementById("view-schedule"),
-  backlog: document.getElementById("view-backlog")
+  backlog: document.getElementById("view-backlog"),
+  worklog: document.getElementById("view-worklog")
 };
 document.querySelectorAll(".view-btn").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -1136,6 +1399,7 @@ document.querySelectorAll(".view-btn").forEach(btn => {
     document.querySelectorAll(".view-btn").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
     for (const [k, el] of Object.entries(views)) el.hidden = k !== want;
     if (want === "replies") qEl.focus();
+    if (want === "worklog") wlTicket.focus();
   });
 });
 
