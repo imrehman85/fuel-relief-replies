@@ -161,7 +161,6 @@ table.sched th,table.sched td{border:1px solid var(--border);padding:9px 11px;te
 table.sched thead th{background:var(--surface-2);font-weight:600;color:var(--fg);font-size:12.5px}
 table.sched tbody td:first-child{background:var(--surface);min-width:170px;white-space:normal}
 .sn{font-weight:600;color:var(--fg)}
-.st{font-size:11.5px;color:var(--faint);margin-top:1px}
 td.shift{font-weight:500}
 td.off-col{color:var(--muted);background:var(--surface)}
 tfoot td{background:var(--surface-2);font-size:12px;color:var(--muted)}
@@ -848,14 +847,12 @@ function sizeAgentInput(){
 
 /* ---------- shift schedule ---------- */
 const ROSTER = [
-  { n:"Asif",         t:"Team Lead",       d:["Morning","Morning","Morning","Morning","Morning","OFF","OFF"],     o:"Sat, Sun" },
-  { n:"Sohail",       t:"Night preferred", d:["Night","Night","Night","Night","Night","OFF","OFF"],               o:"Sat, Sun" },
-  { n:"Usaid",        t:"",                d:["Evening","Evening","Evening","OFF","OFF","Morning","Morning"],     o:"Thu, Fri" },
-  { n:"Abdur Rahman", t:"Night preferred", d:["Evening","Evening","Night","OFF","OFF","Night","Night"],           o:"Thu, Fri" },
-  { n:"Shahbaz",      t:"No DB",           d:["Morning","OFF","OFF","Morning","Morning","Morning","Morning"],     o:"Tue, Wed" },
-  { n:"Sajeel",       t:"",                d:["OFF","OFF","Evening","Evening","Evening","Evening","Evening"],     o:"Mon, Tue" },
-  { n:"Inam Ullah",   t:"No DB",           d:["Evening","OFF","OFF","Evening","Evening","Evening","Evening"],     o:"Tue, Wed" },
-  { n:"Mujtaba",      t:"No DB",           d:["Night","Morning","Morning","OFF","OFF","Night","Night"],           o:"Thu, Fri" }
+  { n:"Asif",         d:["Morning","Morning","Morning","Morning","Morning","OFF","OFF"],     o:"Sat, Sun" },
+  { n:"Usaid",        d:["OFF","OFF","Evening","Evening","Night","Morning","Morning"],       o:"Mon, Tue" },
+  { n:"Abdur Rahman", d:["Evening","Evening","Night","Night","Night","OFF","OFF"],           o:"Sat, Sun" },
+  { n:"Shahbaz",      d:["Morning","OFF","OFF","Morning","Morning","Morning","Morning"],     o:"Tue, Wed" },
+  { n:"Inam Ullah",   d:["Evening","Night","OFF","OFF","Evening","Night","Evening"],         o:"Wed, Thu" },
+  { n:"Mujtaba",      d:["Night","Morning","Morning","OFF","OFF","Evening","Night"],         o:"Thu, Fri" }
 ];
 const SHIFT_VAR = { Morning:"m", Evening:"e", Night:"n", OFF:"o" };
 
@@ -864,7 +861,6 @@ for (const r of ROSTER) {
   const tr = document.createElement("tr");
   const who = document.createElement("td");
   const nm = document.createElement("div"); nm.className = "sn"; nm.textContent = r.n; who.append(nm);
-  if (r.t) { const t = document.createElement("div"); t.className = "st"; t.textContent = r.t; who.append(t); }
   tr.append(who);
   for (const s of r.d) {
     const td = document.createElement("td");
