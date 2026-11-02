@@ -150,6 +150,7 @@ h1.title{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,5vw,4
 /* ---------- schedule ---------- */
 .sched-legend{display:flex;gap:18px;flex-wrap:wrap;margin:26px 0 14px;font-size:12.5px;color:var(--muted)}
 .sched-legend span{display:inline-flex;align-items:center;gap:6px}
+.sched-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
 .sw{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none}
 .sw[data-s="Morning"]{background:var(--sh-m-bg);border:1px solid var(--sh-m-fg)}
 .sw[data-s="Evening"]{background:var(--sh-e-bg);border:1px solid var(--sh-e-fg)}
@@ -335,6 +336,10 @@ table.blsheet td.bl-dupe{background:#f6c9c0;font-weight:700;box-shadow:inset 0 0
       <span><i class="sw" data-s="Evening"></i>Evening</span>
       <span><i class="sw" data-s="Night"></i>Night</span>
       <span><i class="sw" data-s="OFF"></i>Off</span>
+      <div class="sched-actions">
+        <button type="button" class="bl-btn" id="schedPng">Download PNG</button>
+        <button type="button" class="bl-btn primary" id="schedPdf">Download PDF</button>
+      </div>
     </div>
     <div class="sched-wrap">
       <table class="sched">
@@ -895,6 +900,126 @@ for (const shift of ["Morning","Evening","Night"]) {
   tr.append(document.createElement("td"));
   schedCover.append(tr);
 }
+
+/* Exports are drawn on a canvas in the light palette so they print the same whatever theme is on screen. */
+const EXPORT_SHIFT = {
+  m:{ bg:"#e1f5ee", fg:"#0f6e56" }, e:{ bg:"#faeeda", fg:"#854f0b" },
+  n:{ bg:"#eeedfe", fg:"#534ab7" }, o:{ bg:"#fbeaf0", fg:"#993556" }
+};
+const EXPORT_DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+async function drawRoster(){
+  if (document.fonts) await document.fonts.ready;
+  const pad = 28, nameW = 150, dayW = 92, offW = 110, titleH = 52, headH = 36, rowH = 38, coverH = 32;
+  const W = pad * 2 + nameW + dayW * 7 + offW;
+  const H = pad * 2 + titleH + headH + rowH * ROSTER.length + coverH * 3;
+  const scale = 2;
+  const cv = document.createElement("canvas");
+  cv.width = W * scale; cv.height = H * scale;
+  const g = cv.getContext("2d");
+  g.scale(scale, scale);
+  g.fillStyle = "#ffffff"; g.fillRect(0, 0, W, H);
+
+  const body = '"IBM Plex Sans","Segoe UI",Arial,sans-serif';
+  g.textBaseline = "middle";
+  g.fillStyle = "#18201a";
+  g.font = '700 22px "IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif';
+  g.fillText("Shift schedule", pad, pad + 14);
+  const d = new Date();
+  const M = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  g.font = "400 12px " + body;
+  g.fillStyle = "#8b978f";
+  g.textAlign = "right";
+  g.fillText("Exported " + d.getDate() + " " + M[d.getMonth()] + " " + d.getFullYear(), W - pad, pad + 14);
+  g.textAlign = "left";
+
+  const cols = [nameW, ...EXPORT_DAYS.map(() => dayW), offW];
+  const cell = (x, y, w, h, text, bg, fg, weight) => {
+    g.fillStyle = bg; g.fillRect(x, y, w, h);
+    g.strokeStyle = "#dbe2d9"; g.lineWidth = 1; g.strokeRect(x + .5, y + .5, w, h);
+    g.fillStyle = fg; g.font = weight + " 13px " + body;
+    g.fillText(text, x + 11, y + h / 2);
+  };
+  const row = (y, h, texts, style) => {
+    let x = pad;
+    texts.forEach((t, i) => { const s = style(i, t); cell(x, y, cols[i], h, t, s.bg, s.fg, s.w); x += cols[i]; });
+  };
+
+  let y = pad + titleH;
+  row(y, headH, ["Name", ...EXPORT_DAYS, "Weekly off"], () => ({ bg:"#eef2ec", fg:"#18201a", w:600 }));
+  y += headH;
+  for (const r of ROSTER) {
+    row(y, rowH, [r.n, ...r.d, r.o], (i, t) => {
+      if (i === 0) return { bg:"#ffffff", fg:"#18201a", w:600 };
+      if (i === 8) return { bg:"#ffffff", fg:"#5d6b61", w:400 };
+      const s = EXPORT_SHIFT[SHIFT_VAR[t]];
+      return { bg:s.bg, fg:s.fg, w:500 };
+    });
+    y += rowH;
+  }
+  for (const shift of ["Morning","Evening","Night"]) {
+    const counts = EXPORT_DAYS.map((_, i) => ROSTER.filter(r => r.d[i] === shift).length);
+    const fg = EXPORT_SHIFT[SHIFT_VAR[shift]].fg;
+    row(y, coverH, [shift + " cover", ...counts.map(String), ""], (i, t) => {
+      if (i === 0 || i === 8) return { bg:"#eef2ec", fg:"#5d6b61", w:400 };
+      return t === "0" ? { bg:"#eef2ec", fg:"#8b978f", w:400 } : { bg:"#eef2ec", fg, w:600 };
+    });
+    y += coverH;
+  }
+  return { cv, W, H };
+}
+
+function saveBlob(blob, name){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+function canvasBlob(cv, type, quality){
+  return new Promise(res => cv.toBlob(res, type, quality));
+}
+
+/* A one-page PDF holding the roster as a JPEG, fitted to A4 landscape. */
+function pdfFromJpeg(jpg, iw, ih, aspectW, aspectH){
+  const pw = 842, ph = 595, margin = 28;
+  const k = Math.min((pw - margin * 2) / aspectW, (ph - margin * 2) / aspectH);
+  const w = aspectW * k, h = aspectH * k;
+  const x = (pw - w) / 2, y = ph - margin - h;
+  const enc = new TextEncoder();
+  const parts = [], offsets = [];
+  let len = 0;
+  const push = p => { const b = typeof p === "string" ? enc.encode(p) : p; parts.push(b); len += b.length; };
+  const obj = (n, write) => { offsets[n] = len; push(n + " 0 obj\n"); write(); push("\nendobj\n"); };
+  const draw = "q " + w.toFixed(2) + " 0 0 " + h.toFixed(2) + " " + x.toFixed(2) + " " + y.toFixed(2) + " cm /Im0 Do Q";
+  push("%PDF-1.4\n");
+  obj(1, () => push("<< /Type /Catalog /Pages 2 0 R >>"));
+  obj(2, () => push("<< /Type /Pages /Kids [3 0 R] /Count 1 >>"));
+  obj(3, () => push("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 " + pw + " " + ph + "] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>"));
+  obj(4, () => {
+    push("<< /Type /XObject /Subtype /Image /Width " + iw + " /Height " + ih + " /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length " + jpg.length + " >>\nstream\n");
+    push(jpg);
+    push("\nendstream");
+  });
+  obj(5, () => push("<< /Length " + draw.length + " >>\nstream\n" + draw + "\nendstream"));
+  const xref = len;
+  push("xref\n0 6\n0000000000 65535 f \n" + offsets.slice(1).map(o => String(o).padStart(10, "0") + " 00000 n \n").join(""));
+  push("trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n" + xref + "\n%%EOF");
+  return new Blob(parts, { type: "application/pdf" });
+}
+
+document.getElementById("schedPng").addEventListener("click", async () => {
+  const { cv } = await drawRoster();
+  saveBlob(await canvasBlob(cv, "image/png"), "Shift-roster.png");
+});
+document.getElementById("schedPdf").addEventListener("click", async () => {
+  const { cv, W, H } = await drawRoster();
+  const jpg = new Uint8Array(await (await canvasBlob(cv, "image/jpeg", 0.95)).arrayBuffer());
+  saveBlob(pdfFromJpeg(jpg, cv.width, cv.height, W, H), "Shift-roster.pdf");
+});
 
 /* ---------- backlog sheet builder ---------- */
 const BL_KEY = "frr.backlog";
